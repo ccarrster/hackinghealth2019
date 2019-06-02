@@ -57,6 +57,15 @@
 			$('#results').html("");
 			$('#results').append('<div class="result"><div>Waterloo Potters\' Workshop</div><div>Pottery</div><div>Waterloo Region</div><div>Validated May 2019</div><div>Cost: $$$</div><div>Events List</div><div class="event"><div>Date</div><div>Time Start</div><div>Time End</div><div>Location</div><div>Cost</div><div>Details</div><div></div>');
 		}
+		function validate(){
+			$('#results').html("");
+			$('#results').append('<div class="result"><div>Waterloo Potters\' Workshop</div><div>Pottery</div><div>Waterloo Region</div><div>Not Validated</div><div>Cost: $$$</div><div><button type="button" class="btn btn-primary" onclick="details(1)">Details</button></div></div>');
+			$('#results').append('<div class="result"><div>Sculption</div><div>Pottery</div><div>Waterloo Region</div><div>Not Validated</div><div>Cost: $$$</div><div><button type="button" class="btn btn-primary" onclick="details(1)">Details</button></div></div>');
+		}
+		function add(groupid){
+			$('#results').html("");
+			$('#results').append('<div class="result"><div>Name <input type="text"></div><div><div>Subjects <input type="text"></div></div><div><div>Location <input type="text"></div></div><div><div>Contact <input type="text"></div></div><div><div>Cost <input type="text"></div></div><div>Add Events</div><div class="event"><div>Date <input type="text"></div><div>Start Time <input type="text"></div><div>End Time <input type="text"></div><div>Location <input type="text"></div><div>Cost <input type="text"></div><div>Details <input type="text"></div><div></div>');
+		}
 		$(function() {
 			var countries = new Bloodhound({
 			  datumTokenizer: Bloodhound.tokenizers.whitespace,
@@ -76,10 +85,10 @@
 	</script>
     </div>
     <div>
-	   	<a href="">Add a Group</a>
+    	<button type="button" class="btn btn-primary" onclick="add()">Add Group</button>
     </div>
     <div>
-	    <a href="">Validate Groups</a>
+	    <button type="button" class="btn btn-primary" onclick="validate()">Validate Groups</button>
     </div>
     <p style="font-size: 0.9rem;font-style: italic;"><a href="https://www.behance.net/gallery/28235335/DAB-Radio">"DAB+ Radio"</a><span> by <span>warren willmott</span></span> is licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=ccsearch&atype=html" style="margin-right: 5px;">CC BY-NC 4.0</a><a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=ccsearch&atype=html" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;opacity: .7;margin-top: 2px;margin-left: 3px;height: 22px !important;"><img style="height: inherit;margin-right: 3px;display: inline-block;" src="https://search.creativecommons.org/static/img/cc_icon.svg" /><img style="height: inherit;margin-right: 3px;display: inline-block;" src="https://search.creativecommons.org/static/img/cc-by_icon.svg" /><img style="height: inherit;margin-right: 3px;display: inline-block;" src="https://search.creativecommons.org/static/img/cc-nc_icon.svg" /></a></p>
     </div>
