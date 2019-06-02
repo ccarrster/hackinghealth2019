@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Together</title>
+    <title>Community</title>
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -34,11 +34,60 @@
     	.event{
 			border: 1px solid black;
     	}
+      #results img{
+        max-width: 100px;
+        max-height: 200px;
+        
+      }
     </style>
+    <script>
+    var groups = [];
+    var group = {
+      name: 'Art for art\'s sake',
+      address: '25 Regina St. S Waterloo On N2J 1R8 1R8',
+      phone: '519-886-4577',
+      tags: ['Art', 'Learning'],
+      info: 'Come and join Art for Art\'s Sake! This is a drop in program where you discover, learn and play with art',
+      image: 'artssake.jpg',
+      events: ['May 10, 25, June 7, 21 10:30 am - 12:30 pm'],
+      cost: '$5'
+  };
+  groups.push(group);
+  var group = {
+      name: 'Down the garden path',
+      address: 'St. Andrew\'s Presbyterian Church Queen at Weber, downtown Kitchener',
+      phone: '',
+      tags: ['Music Listening', 'Park'],
+      info: 'Low cost lunches from 11:30 Music 12:15-12:45 pm',
+      image: 'churchconcerts.jpg',
+      events: ['June 5 Debra Lacoste trumpet and Anne-Marie McDairmid']
+  };
+  groups.push(group);
+  var group = {
+      name: 'Playground Festival of New Work',
+      address: '122 Frederic St. Kitchener',
+      phone: '',
+      tags: ['Written Work'],
+      info: 'Outdoor swimming pool',
+      image: '20190601_220706.jpg',
+      events: ['June 6 7:30', 'June 7 7:30', 'June 8 2:00', 'June 8 7:30']
+  };
+  var group = {
+      name: 'Sierra',
+      address: 'jasonsierra72@gmail.com',
+      phone: '',
+      tags: ['Band', 'Prog Rock'],
+      info: 'Need a drummer.',
+      image: 'drummer.jpg',
+      events: {}
+  };
+  groups.push(group);
+
+    </script>
   </head>
   <body>
 	<div class="container">
-    <h1>Together</h1>
+    <h1>Community</h1>
     <img src="hi.png">
     <div>
 		<div>View validated groups</div>
@@ -50,17 +99,70 @@
 		<script>
 		function search(){
 			$('#results').html("");
-			$('#results').append('<div class="result"><div>Waterloo Potters\' Workshop</div><div>Pottery</div><div>Waterloo Region</div><div>Validated May 2019</div><div>Cost: $$$</div><div><button type="button" class="btn btn-primary" onclick="details(1)">Details</button></div></div>');
-			$('#results').append('<div class="result"><div>Sculption</div><div>Pottery</div><div>Waterloo Region</div><div>Validated April 2019</div><div>Cost: $$$</div><div><button type="button" class="btn btn-primary" onclick="details(1)">Details</button></div></div>');
+      for(groupkey in groups){
+        var group = groups[groupkey];
+        var tagstring = "";
+        for(tagkey in group.tags){
+          var tag = group.tags[tagkey];
+          var sepstring = ", ";
+          if(tagstring == ""){
+            sepstring = "";
+          }
+          tagstring += sepstring + tag;
+        }
+        if(group.image == ''){
+          imagestring = '';
+        } else {
+          imagestring = '<a href="'+group.image+'"><img src="'+group.image+'"></a>';
+        }
+        $('#results').append('<div class="result"><div>'+group.name+'</div><div>'+group.address+'</div><div>'+group.phone+'</div><div>'+group.info+'</div><div>'+tagstring+'</div><div>'+imagestring+'</div><div><button type="button" class="btn btn-primary" onclick="details('+groupkey+')">Details</button></div></div>');
+
+      }
+		
 		}
-		function details(groupid){
+		function details(groupkey){
 			$('#results').html("");
-			$('#results').append('<div class="result"><div>Waterloo Potters\' Workshop</div><div>Pottery</div><div>Waterloo Region</div><div>Validated May 2019</div><div>Cost: $$$</div><div>Events List</div><div class="event"><div>Date</div><div>Time Start</div><div>Time End</div><div>Location</div><div>Cost</div><div>Details</div><div></div>');
+
+        var group = groups[groupkey];
+        var tagstring = "";
+        for(tagkey in group.tags){
+          var tag = group.tags[tagkey];
+          var sepstring = ", ";
+          if(tagstring == ""){
+            sepstring = "";
+          }
+          tagstring += sepstring + tag;
+        }
+        if(group.image == ''){
+          imagestring = '';
+        } else {
+          imagestring = '<a href="'+group.image+'"><img src="'+group.image+'"></a>';
+        }
+        $('#results').append('<div class="result"><div>'+group.name+'</div><div>'+group.address+'</div><div>'+group.phone+'</div><div>'+group.info+'</div><div>'+tagstring+'</div><div>'+imagestring+'</div><div><button type="button" class="btn btn-primary" onclick="details(1)">Details</button></div></div>');
+
+      
 		}
 		function validate(){
 			$('#results').html("");
-			$('#results').append('<div class="result"><div>Waterloo Potters\' Workshop</div><div>Pottery</div><div>Waterloo Region</div><div>Not Validated</div><div>Cost: $$$</div><div><button type="button" class="btn btn-primary" onclick="details(1)">Details</button></div></div>');
-			$('#results').append('<div class="result"><div>Sculption</div><div>Pottery</div><div>Waterloo Region</div><div>Not Validated</div><div>Cost: $$$</div><div><button type="button" class="btn btn-primary" onclick="details(1)">Details</button></div></div>');
+      for(groupkey in groups){
+        var group = groups[groupkey];
+        var tagstring = "";
+        for(tagkey in group.tags){
+          var tag = group.tags[tagkey];
+          var sepstring = ", ";
+          if(tagstring == ""){
+            sepstring = "";
+          }
+          tagstring += sepstring + tag;
+        }
+        if(group.image == ''){
+          imagestring = '';
+        } else {
+          imagestring = '<a href="'+group.image+'"><img src="'+group.image+'"></a>';
+        }
+        $('#results').append('<div class="result"><div>'+group.name+'</div><div>'+group.address+'</div><div>'+group.phone+'</div><div>'+group.info+'</div><div>'+tagstring+'</div><div>'+imagestring+'</div><div><button type="button" class="btn btn-primary" onclick="details('+groupkey+')">Details</button></div></div>');
+
+      }
 		}
 		function add(groupid){
 			$('#results').html("");
