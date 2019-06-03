@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<script>
+		var objects = [];
+	</script>
+</head>
+<body>
+	<div>
+		Idea is to create a system to store community information, and flexably expand fields with low effort. When a new piece of information say "event cost" is found. All events will get space for event cost. All events will display the field event cost. If it is not entered, "NA" will be displayed.
+	</div>
+	<div id="objects">
+
+	</div>
+	<div>
+		<form onsubmit="newobject(); return false;">
+		Object Name <input type="text" id="objectname"> <input type="button" onclick="newobject();" value="Create Object">
+		</form>
+	</div>
+	<script>
+		function newobject(){
+			var name = $('#objectname').val().toLowerCase();
+			for(objectkey in objects){
+				var object = objects[objectkey];
+				if(object.name == name){
+					//Already exists
+					alert('Name Already Exists '+name);
+					return;
+				}
+			}
+			$("#objectname").val("");
+			var object = {};
+			object.name = name;
+			objects.push(object);
+			refreshobjects();
+		}
+		function refreshobjects(){
+			$('#objects').html("");
+			for(objectkey in objects){
+				var object = objects[objectkey];
+				$('#objects').append("<div>"+object.name+"</div>");
+			}
+		}
+	</script>
+</body>
+</html>
