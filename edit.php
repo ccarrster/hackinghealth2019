@@ -7,24 +7,24 @@ $link = mysqli_connect("127.0.0.1", "root", "F3ckth1s", "community");
 if(isset($_POST['formtype'])){
 	$formatType = $_POST['formtype'];
 	if($formatType == 'createevent'){
-		$query = "insert into event (name, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', now(), now());";
+		$query = "insert into event (name, description, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'createorganization'){
-		$query = "insert into organization (name, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', now(), now());";
+		$query = "insert into organization (name, description, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'createlocation'){
-		$query = "insert into location (name, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', now(), now());";
+		$query = "insert into location (name, description, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'createresource'){
-		$query = "insert into resource (name, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', now(), now());";
+		$query = "insert into resource (name, description, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'createrelationship'){
-		$a = $_POST['a'];
-		$b = $_POST['b'];
-		$a_type = 'test';
-		$a_id = 1;
-		$b_type = 'test';
-		$b_id = 1;
+		$splitA = explode('_', $_POST['a']);
+		$splitB = explode('_', $_POST['b']);
+		$a_type = $splitA[0];
+		$a_id = $splitA[1];
+		$b_type = $splitB[0];
+		$b_id = $splitB[1];
 		$query = "insert into relationship (type, a_type, a_id, b_type, b_id, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['type'])."', '".mysqli_real_escape_string($link, $a_type)."', '".mysqli_real_escape_string($link, $a_id)."', '".mysqli_real_escape_string($link, $b_type)."', '".mysqli_real_escape_string($link, $b_id)."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'deleteevent'){
@@ -78,39 +78,86 @@ if (mysqli_num_rows($resourceResult) > 0) {
     }
 }
 $relationships = [];
+$parentRelationships = [];
+$childRelationships = [];
 $relationshipQuery = "select * from relationship";
 $relationshipResult = mysqli_query($link, $relationshipQuery);
 if (mysqli_num_rows($relationshipResult) > 0) {
     while($row = mysqli_fetch_assoc($relationshipResult)) {
         $relationships[] = $row;
+        if(!isset($parentRelationships[$row['a_type'].'_'.$row['a_id']])){
+        	$parentRelationships[$row['a_type'].'_'.$row['a_id']] = [];
+        }
+        $parentRelationships[$row['a_type'].'_'.$row['a_id']][] = $row;
+        if(!isset($childRelationships[$row['b_type'].'_'.$row['b_id']])){
+        	$childRelationships[$row['b_type'].'_'.$row['b_id']] = [];
+        }
+        $childRelationships[$row['b_type'].'_'.$row['b_id']][] = $row;
     }
 }
+
+
+
 ?>
 <form method="post">
 	<input type="hidden" name="formtype" value="createevent">
-	<input type="text" name="name">
+	Name <input type="text" name="name">
+	Description <textarea name="description"></textarea>
 	<input type="submit" value="Create Event">
 </form>
 <form method="post">
 	<input type="hidden" name="formtype" value="createorganization">
-	<input type="text" name="name">
+	Name <input type="text" name="name">
+	Description <textarea name="description"></textarea>
 	<input type="submit" value="Create Organization">
 </form>
 <form method="post">
 	<input type="hidden" name="formtype" value="createlocation">
-	<input type="text" name="name">
+	Name <input type="text" name="name">
+	Description <textarea name="description"></textarea>
 	<input type="submit" value="Create Location">
 </form>
 <form method="post">
 	<input type="hidden" name="formtype" value="createresource">
-	<input type="text" name="name">
+	Name <input type="text" name="name">
+	Description <textarea name="description"></textarea>
 	<input type="submit" value="Create Resource">
 </form>
 <form method="post">
 	<input type="hidden" name="formtype" value="createrelationship">
 	<input type="text" name="type">
-	<select name="a"></select>
-	<select name="b"></select>
+	<select name="a">
+		<?php
+		foreach($events as $target){
+			echo('<option value="event_'.$target['id'].'">'.$target['name'].'</option>');
+		}
+		foreach($organizations as $target){
+			echo('<option value="organization_'.$target['id'].'">'.$target['name'].'</option>');
+		}
+		foreach($locations as $target){
+			echo('<option value="location_'.$target['id'].'">'.$target['name'].'</option>');
+		}
+		foreach($resources as $target){
+			echo('<option value="resource_'.$target['id'].'">'.$target['name'].'</option>');
+		}
+		?>
+	</select>
+	<select name="b">
+		<?php
+		foreach($events as $target){
+			echo('<option value="event_'.$target['id'].'">'.$target['name'].'</option>');
+		}
+		foreach($organizations as $target){
+			echo('<option value="organization_'.$target['id'].'">'.$target['name'].'</option>');
+		}
+		foreach($locations as $target){
+			echo('<option value="location_'.$target['id'].'">'.$target['name'].'</option>');
+		}
+		foreach($resources as $target){
+			echo('<option value="resource_'.$target['id'].'">'.$target['name'].'</option>');
+		}
+		?>
+	</select>
 	<input type="submit" value="Create Relationship">
 </form>
 <div>Events</div>
@@ -134,6 +181,14 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 			echo('<div>'.$key.': '.$value.'<div>');
 		}
 		echo('<form method="post"><input type="hidden" name="formtype" value="deleteorganization"><input type="hidden" name="id" value="'.$organization['id'].'"><input type="submit" value="Delete"></form></div>');
+		//TODO clean this up into lists of links and on each type
+		//Also split up by relationship type
+		if(isset($parentRelationships['organization_'.$organization['id']])){
+			var_dump($parentRelationships['organization_'.$organization['id']]);
+		}
+		if(isset($childRelationships['organization_'.$organization['id']])){
+			var_dump($childRelationships['organization_'.$organization['id']]);
+		}
 	}
 	?>
 </div>
