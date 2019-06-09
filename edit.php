@@ -50,7 +50,7 @@ $eventQuery = "select * from event";
 $result = mysqli_query($link, $eventQuery);
 if (mysqli_num_rows($result) > 0) {
     while($row = mysqli_fetch_assoc($result)) {
-        $events[] = $row;
+        $events[$row['id']] = $row;
     }
 }
 $organizations = [];
@@ -58,7 +58,7 @@ $organizationQuery = "select * from organization";
 $organizationResult = mysqli_query($link, $organizationQuery);
 if (mysqli_num_rows($organizationResult) > 0) {
     while($row = mysqli_fetch_assoc($organizationResult)) {
-        $organizations[] = $row;
+        $organizations[$row['id']] = $row;
     }
 }
 $locations = [];
@@ -66,7 +66,7 @@ $locationQuery = "select * from location";
 $locationResult = mysqli_query($link, $locationQuery);
 if (mysqli_num_rows($locationResult) > 0) {
     while($row = mysqli_fetch_assoc($locationResult)) {
-        $locations[] = $row;
+        $locations[$row['id']] = $row;
     }
 }
 $resources = [];
@@ -74,7 +74,7 @@ $resourceQuery = "select * from resource";
 $resourceResult = mysqli_query($link, $resourceQuery);
 if (mysqli_num_rows($resourceResult) > 0) {
     while($row = mysqli_fetch_assoc($resourceResult)) {
-        $resources[] = $row;
+        $resources[$row['id']] = $row;
     }
 }
 $relationships = [];
@@ -84,7 +84,7 @@ $relationshipQuery = "select * from relationship";
 $relationshipResult = mysqli_query($link, $relationshipQuery);
 if (mysqli_num_rows($relationshipResult) > 0) {
     while($row = mysqli_fetch_assoc($relationshipResult)) {
-        $relationships[] = $row;
+        $relationships[$row['id']] = $row;
         if(!isset($parentRelationships[$row['a_type'].'_'.$row['a_id']])){
         	$parentRelationships[$row['a_type'].'_'.$row['a_id']] = [];
         }
@@ -169,6 +169,50 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 			echo('<div>'.$key.': '.$value.'<div>');
 		}
 		echo('<form method="post"><input type="hidden" name="formtype" value="deleteevent"><input type="hidden" name="id" value="'.$event['id'].'"><input type="submit" value="Delete"></form></div>');
+		echo('<div><div>Parent</div>');
+		if(isset($parentRelationships['event_'.$event['id']])){
+			echo('<div></div>');
+			foreach($parentRelationships['event_'.$event['id']] as $parent){
+				$type = $parent['type'];
+				$childType = $parent['b_type'];
+				$childId = $parent['b_id'];
+				$name = '';
+				$child = null;
+				if($childType == 'event'){
+					$child = $events[$childId];
+				} elseif($childType == 'organization'){
+					$child = $organizations[$childId];
+				} elseif($childType == 'location'){
+					$child = $locations[$childId];
+				} elseif($childType == 'resource'){
+					$child = $resources[$childId];
+				}
+				echo('<div>Type: '.$type.' ChildType: '.$childType.' Name: '.$child['name'].'</div>');
+			}
+		}
+		echo('</div>');
+		echo('<div><div>Child</div>');
+		if(isset($childRelationships['event_'.$event['id']])){
+			echo('<div></div>');
+			foreach($childRelationships['event_'.$event['id']] as $parent){
+				$type = $parent['type'];
+				$childType = $parent['a_type'];
+				$childId = $parent['a_id'];
+				$name = '';
+				$child = null;
+				if($childType == 'event'){
+					$child = $events[$childId];
+				} elseif($childType == 'organization'){
+					$child = $organizations[$childId];
+				} elseif($childType == 'location'){
+					$child = $locations[$childId];
+				} elseif($childType == 'resource'){
+					$child = $resources[$childId];
+				}
+				echo('<div>Type: '.$type.' ParentType: '.$childType.' Name: '.$child['name'].'</div>');
+			}
+		}
+		echo('</div>');
 	}
 	?>
 </div>
@@ -181,14 +225,50 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 			echo('<div>'.$key.': '.$value.'<div>');
 		}
 		echo('<form method="post"><input type="hidden" name="formtype" value="deleteorganization"><input type="hidden" name="id" value="'.$organization['id'].'"><input type="submit" value="Delete"></form></div>');
-		//TODO clean this up into lists of links and on each type
-		//Also split up by relationship type
+		echo('<div><div>Parent</div>');
 		if(isset($parentRelationships['organization_'.$organization['id']])){
-			var_dump($parentRelationships['organization_'.$organization['id']]);
+			echo('<div></div>');
+			foreach($parentRelationships['organization_'.$organization['id']] as $parent){
+				$type = $parent['type'];
+				$childType = $parent['b_type'];
+				$childId = $parent['b_id'];
+				$name = '';
+				$child = null;
+				if($childType == 'event'){
+					$child = $events[$childId];
+				} elseif($childType == 'organization'){
+					$child = $organizations[$childId];
+				} elseif($childType == 'location'){
+					$child = $locations[$childId];
+				} elseif($childType == 'resource'){
+					$child = $resources[$childId];
+				}
+				echo('<div>Type: '.$type.' ChildType: '.$childType.' Name: '.$child['name'].'</div>');
+			}
 		}
+		echo('</div>');
+		echo('<div><div>Child</div>');
 		if(isset($childRelationships['organization_'.$organization['id']])){
-			var_dump($childRelationships['organization_'.$organization['id']]);
+			echo('<div></div>');
+			foreach($childRelationships['organization_'.$organization['id']] as $parent){
+				$type = $parent['type'];
+				$childType = $parent['a_type'];
+				$childId = $parent['a_id'];
+				$name = '';
+				$child = null;
+				if($childType == 'event'){
+					$child = $events[$childId];
+				} elseif($childType == 'organization'){
+					$child = $organizations[$childId];
+				} elseif($childType == 'location'){
+					$child = $locations[$childId];
+				} elseif($childType == 'resource'){
+					$child = $resources[$childId];
+				}
+				echo('<div>Type: '.$type.' ParentType: '.$childType.' Name: '.$child['name'].'</div>');
+			}
 		}
+		echo('</div>');
 	}
 	?>
 </div>
@@ -201,6 +281,50 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 			echo('<div>'.$key.': '.$value.'<div>');
 		}
 		echo('<form method="post"><input type="hidden" name="formtype" value="deletelocation"><input type="hidden" name="id" value="'.$location['id'].'"><input type="submit" value="Delete"></form></div>');
+				echo('<div><div>Parent</div>');
+		if(isset($parentRelationships['location_'.$location['id']])){
+			echo('<div></div>');
+			foreach($parentRelationships['location_'.$location['id']] as $parent){
+				$type = $parent['type'];
+				$childType = $parent['b_type'];
+				$childId = $parent['b_id'];
+				$name = '';
+				$child = null;
+				if($childType == 'event'){
+					$child = $events[$childId];
+				} elseif($childType == 'organization'){
+					$child = $organizations[$childId];
+				} elseif($childType == 'location'){
+					$child = $locations[$childId];
+				} elseif($childType == 'resource'){
+					$child = $resources[$childId];
+				}
+				echo('<div>Type: '.$type.' ChildType: '.$childType.' Name: '.$child['name'].'</div>');
+			}
+		}
+		echo('</div>');
+		echo('<div><div>Child</div>');
+		if(isset($childRelationships['location_'.$location['id']])){
+			echo('<div></div>');
+			foreach($childRelationships['location_'.$location['id']] as $parent){
+				$type = $parent['type'];
+				$childType = $parent['a_type'];
+				$childId = $parent['a_id'];
+				$name = '';
+				$child = null;
+				if($childType == 'event'){
+					$child = $events[$childId];
+				} elseif($childType == 'organization'){
+					$child = $organizations[$childId];
+				} elseif($childType == 'location'){
+					$child = $locations[$childId];
+				} elseif($childType == 'resource'){
+					$child = $resources[$childId];
+				}
+				echo('<div>Type: '.$type.' ParentType: '.$childType.' Name: '.$child['name'].'</div>');
+			}
+		}
+		echo('</div>');
 	}
 	?>
 </div>
@@ -213,6 +337,50 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 			echo('<div>'.$key.': '.$value.'<div>');
 		}
 		echo('<form method="post"><input type="hidden" name="formtype" value="deleteresource"><input type="hidden" name="id" value="'.$resource['id'].'"><input type="submit" value="Delete"></form></div>');
+				echo('<div><div>Parent</div>');
+		if(isset($parentRelationships['resource_'.$resource['id']])){
+			echo('<div></div>');
+			foreach($parentRelationships['resource_'.$resource['id']] as $parent){
+				$type = $parent['type'];
+				$childType = $parent['b_type'];
+				$childId = $parent['b_id'];
+				$name = '';
+				$child = null;
+				if($childType == 'event'){
+					$child = $events[$childId];
+				} elseif($childType == 'organization'){
+					$child = $organizations[$childId];
+				} elseif($childType == 'location'){
+					$child = $locations[$childId];
+				} elseif($childType == 'resource'){
+					$child = $resources[$childId];
+				}
+				echo('<div>Type: '.$type.' ChildType: '.$childType.' Name: '.$child['name'].'</div>');
+			}
+		}
+		echo('</div>');
+		echo('<div><div>Child</div>');
+		if(isset($childRelationships['resource_'.$resource['id']])){
+			echo('<div></div>');
+			foreach($childRelationships['resource_'.$resource['id']] as $parent){
+				$type = $parent['type'];
+				$childType = $parent['a_type'];
+				$childId = $parent['a_id'];
+				$name = '';
+				$child = null;
+				if($childType == 'event'){
+					$child = $events[$childId];
+				} elseif($childType == 'organization'){
+					$child = $organizations[$childId];
+				} elseif($childType == 'location'){
+					$child = $locations[$childId];
+				} elseif($childType == 'resource'){
+					$child = $resources[$childId];
+				}
+				echo('<div>Type: '.$type.' ParentType: '.$childType.' Name: '.$child['name'].'</div>');
+			}
+		}
+		echo('</div>');
 	}
 	?>
 </div>
