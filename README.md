@@ -40,6 +40,7 @@ Parking locations. Cost.
 Minimum Purchase.
 Equipment to bring.
 Equipment rental available. Cost. (Skates, Art Tools)
+Discounts. (Come in costume get 10% off)
 
 Location:
 Description
