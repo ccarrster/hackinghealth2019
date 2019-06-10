@@ -26,3 +26,10 @@ Maybe we include images of past events? Videos?
 Tickets URL? Differnet from Event URL? Likely.
 Payment types accepted
 
+Location:
+Description
+Address
+City, Province
+Postal
+Sub Location (Upper Level, Round back etc)
+
