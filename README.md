@@ -16,3 +16,8 @@ Plan is to have a Relationship as well where you can link two things. Maybe two 
 What others do wrong
 Make it awesome. Web Site links need to work. Check links daily.
 Contact information needs to validated periodically.
+Add to Calendar
+GPS
+Images
+
+Maybe we include images of past events? Videos?
