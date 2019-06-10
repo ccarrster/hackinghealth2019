@@ -37,6 +37,7 @@ Charity
 Event Series. Multiple nights repeating.
 Employment/Volunteer oportunities.
 Parking locations. Cost.
+Minimum Purchase.
 
 Location:
 Description
