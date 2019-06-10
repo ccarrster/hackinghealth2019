@@ -30,6 +30,7 @@ Reoccurling? Every 3rd Monday etc.
 Images of groups creations.
 Suggested Donation
 Items to donate(Food, socks etc?)
+Charity
 
 Location:
 Description
