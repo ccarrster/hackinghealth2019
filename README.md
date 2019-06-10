@@ -38,6 +38,8 @@ Event Series. Multiple nights repeating.
 Employment/Volunteer oportunities.
 Parking locations. Cost.
 Minimum Purchase.
+Equipment to bring.
+Equipment rental available. Cost. (Skates, Art Tools)
 
 Location:
 Description
