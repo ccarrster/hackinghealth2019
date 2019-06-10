@@ -9,17 +9,17 @@ if(isset($_POST['formtype'])){
 	if($formatType == 'createevent'){
 		$date = $_POST['date'];
 		$time = $_POST['time'];
-		$start = '';
+		$start = 'null';
 		if($date != '' && $time != ''){
-			$start = $date . ' ' . $time . ':00';
+			$start = "'".$date . ' ' . $time . ':00'."'";
 		}
 		$enddate = $_POST['enddate'];
 		$endtime = $_POST['endtime'];
-		$end = '';
+		$end = 'null';
 		if($enddate != '' && $endtime != ''){
-			$end = $enddate . ' ' . $endtime . ':00';
+			$end = "'".$enddate . ' ' . $endtime . ':00'."'";
 		}
-		$query = "insert into event (name, description, website, start, end, age, cost, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."',  '".mysqli_real_escape_string($link, $_POST['website'])."', '".mysqli_real_escape_string($link, $start)."', '".mysqli_real_escape_string($link, $end)."', '".mysqli_real_escape_string($link, $_POST['age'])."', '".mysqli_real_escape_string($link, $_POST['cost'])."', now(), now());";
+		$query = "insert into event (name, description, website, start, end, age, cost, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."',  '".mysqli_real_escape_string($link, $_POST['website'])."', ".mysqli_real_escape_string($link, $start).", ".mysqli_real_escape_string($link, $end).", '".mysqli_real_escape_string($link, $_POST['age'])."', '".mysqli_real_escape_string($link, $_POST['cost'])."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'createorganization'){
 		$query = "insert into organization (name, description, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', now(), now());";
@@ -180,6 +180,9 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 		foreach($resources as $target){
 			echo('<option value="resource_'.$target['id'].'">'.$target['name'].'</option>');
 		}
+		foreach($contacts as $target){
+			echo('<option value="contact_'.$target['id'].'">'.$target['name'].'</option>');
+		}
 		?>
 	</select>
 	<select name="b">
@@ -195,6 +198,9 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 		}
 		foreach($resources as $target){
 			echo('<option value="resource_'.$target['id'].'">'.$target['name'].'</option>');
+		}
+		foreach($contacts as $target){
+			echo('<option value="contact_'.$target['id'].'">'.$target['name'].'</option>');
 		}
 		?>
 	</select>
