@@ -17,6 +17,8 @@ Don't have the page jump around when loading.
 No ads!
 
 Event:
+List upcoming events sorted by date/time.
+Filter events by distance from your location.
 Make it awesome. Web Site links need to work. Check links daily.
 Contact information needs to validated periodically.
 Add to Calendar
