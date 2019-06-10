@@ -3,6 +3,11 @@ use community;
 create table event( id INT(11) NOT NULL AUTO_INCREMENT,
   name VARCHAR(200) NOT NULL,
   description text,
+  start DATETIME,
+  end DATETIME,
+  website text,
+  age VARCHAR(200),
+  cost VARCHAR(200),
   created_at DATETIME,
   updated_at DATETIME,
   PRIMARY KEY (id)
@@ -34,6 +39,14 @@ create table relationship( id INT(11) NOT NULL AUTO_INCREMENT,
   a_type VARCHAR(30) NOT NULL,
   b_id INT(11) NOT NULL,
   b_type VARCHAR(30) NOT NULL,
+  created_at DATETIME,
+  updated_at DATETIME,
+  PRIMARY KEY (id)
+);
+create table contact( id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(200),
+  email VARCHAR(200),
+  phone VARCHAR(200),
   created_at DATETIME,
   updated_at DATETIME,
   PRIMARY KEY (id)
