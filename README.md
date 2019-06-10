@@ -17,6 +17,9 @@ Don't have the page jump around when loading.
 No ads!
 
 Event:
+Types - Partisipitory or Observer
+Transportation provided details
+Registration Required
 List upcoming events sorted by date/time.
 Filter events by distance from your location.
 Make it awesome. Web Site links need to work. Check links daily.
@@ -49,6 +52,8 @@ Prizes.
 Who has RSVPed.
 Limited Spots?
 Hidden event details, only for members of group?
+Support Required (Adults must stay with children)
+Date to partisipate by
 
 Location:
 Description
