@@ -19,5 +19,6 @@ Contact information needs to validated periodically.
 Add to Calendar
 GPS
 Images
+Map
 
 Maybe we include images of past events? Videos?
