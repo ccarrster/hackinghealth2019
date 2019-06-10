@@ -43,6 +43,7 @@ Equipment rental available. Cost. (Skates, Art Tools)
 Discounts. (Come in costume get 10% off)
 Cost can be complex... different ages costs... different groups cost.
 Extras available for purchase or upgrades? Cost.
+Prizes.
 
 Location:
 Description
