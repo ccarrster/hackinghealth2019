@@ -44,6 +44,9 @@ Discounts. (Come in costume get 10% off)
 Cost can be complex... different ages costs... different groups cost.
 Extras available for purchase or upgrades? Cost.
 Prizes.
+Who has RSVPed.
+Limited Spots?
+Hidden event details, only for members of group?
 
 Location:
 Description
