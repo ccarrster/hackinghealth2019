@@ -34,6 +34,7 @@ Images of groups creations.
 Suggested Donation
 Items to donate(Food, socks etc?)
 Charity
+Event Series. Multiple nights repeating.
 
 Location:
 Description
