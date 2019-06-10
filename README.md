@@ -23,4 +23,5 @@ Map
 Event Type(Category)
 Volume Discount
 Maybe we include images of past events? Videos?
+Tickets URL? Differnet from Event URL? Likely.
 
