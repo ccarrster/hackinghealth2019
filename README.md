@@ -20,5 +20,6 @@ Add to Calendar
 GPS
 Images
 Map
+Event Type(Category)
 
 Maybe we include images of past events? Videos?
