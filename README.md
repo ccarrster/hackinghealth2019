@@ -34,3 +34,7 @@ City, Province
 Postal
 Sub Location (Upper Level, Round back etc)
 
+Organization:
+Social Links
+URL
+
