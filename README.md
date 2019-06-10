@@ -27,6 +27,7 @@ Tickets URL? Differnet from Event URL? Likely.
 Payment types accepted
 Food provided/available at cost
 Reoccurling? Every 3rd Monday etc.
+Images of groups creations.
 
 Location:
 Description
