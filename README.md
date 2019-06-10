@@ -35,6 +35,7 @@ Suggested Donation
 Items to donate(Food, socks etc?)
 Charity
 Event Series. Multiple nights repeating.
+Employment/Volunteer oportunities.
 
 Location:
 Description
