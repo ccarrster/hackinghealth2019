@@ -25,6 +25,7 @@ Volume Discount
 Maybe we include images of past events? Videos?
 Tickets URL? Differnet from Event URL? Likely.
 Payment types accepted
+Food provided/available at cost
 
 Location:
 Description
