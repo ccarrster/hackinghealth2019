@@ -19,19 +19,22 @@ if(isset($_POST['formtype'])){
 		if($enddate != '' && $endtime != ''){
 			$end = "'".$enddate . ' ' . $endtime . ':00'."'";
 		}
-		$query = "insert into event (name, description, website, start, end, age, cost, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."',  '".mysqli_real_escape_string($link, $_POST['website'])."', ".mysqli_real_escape_string($link, $start).", ".mysqli_real_escape_string($link, $end).", '".mysqli_real_escape_string($link, $_POST['age'])."', '".mysqli_real_escape_string($link, $_POST['cost'])."', now(), now());";
+		$query = "insert into event (name, description, website, start, end, age, cost, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."',  '".mysqli_real_escape_string($link, $_POST['website'])."', '".mysqli_real_escape_string($link, $start)."', '".mysqli_real_escape_string($link, $end)."', '".mysqli_real_escape_string($link, $_POST['age'])."', '".mysqli_real_escape_string($link, $_POST['cost'])."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'createorganization'){
 		$query = "insert into organization (name, description, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'createlocation'){
-		$query = "insert into location (name, description, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', now(), now());";
+		$query = "insert into location (name, description, street, city, province, postal, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', '".mysqli_real_escape_string($link, $_POST['street'])."', '".mysqli_real_escape_string($link, $_POST['city'])."', '".mysqli_real_escape_string($link, $_POST['province'])."', '".mysqli_real_escape_string($link, $_POST['postal'])."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'createresource'){
 		$query = "insert into resource (name, description, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'createcontact'){
 		$query = "insert into contact (name, email, phone, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['email'])."', '".mysqli_real_escape_string($link, $_POST['phone'])."', now(), now());";
+		mysqli_query($link, $query);
+	} elseif($formatType == 'createfeedback'){
+		$query = "insert into feedback (name, description, rating, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', '".mysqli_real_escape_string($link, $_POST['rating'])."', now(), now());";
 		mysqli_query($link, $query);
 	} elseif($formatType == 'createrelationship'){
 		$splitA = explode('_', $_POST['a']);
@@ -59,6 +62,9 @@ if(isset($_POST['formtype'])){
 		mysqli_query($link, $query);
 	} elseif($formatType == 'deletecontact'){
 		$query = "delete from contact where id = ".mysqli_real_escape_string($link, $_POST['id']).";";
+		mysqli_query($link, $query);
+	} elseif($formatType == 'deletefeedback'){
+		$query = "delete from feedback where id = ".mysqli_real_escape_string($link, $_POST['id']).";";
 		mysqli_query($link, $query);
 	}
 }
@@ -101,6 +107,14 @@ $contactResult = mysqli_query($link, $contactQuery);
 if (mysqli_num_rows($contactResult) > 0) {
     while($row = mysqli_fetch_assoc($contactResult)) {
         $contacts[$row['id']] = $row;
+    }
+}
+$feedbacks = [];
+$feedbackQuery = "select * from feedback";
+$feedbackResult = mysqli_query($link, $feedbackQuery);
+if (mysqli_num_rows($feedbackResult) > 0) {
+    while($row = mysqli_fetch_assoc($feedbackResult)) {
+        $feedbacks[$row['id']] = $row;
     }
 }
 $relationships = [];
@@ -148,6 +162,10 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 	<input type="hidden" name="formtype" value="createlocation">
 	Name <input type="text" name="name">
 	Description <textarea name="description"></textarea>
+	Street <input type="text" name="street">
+	City <input type="text" name="city">
+	Province <input type="text" name="province">
+	Postal <input type="text" name="postal">
 	<input type="submit" value="Create Location">
 </form>
 <form method="post">
@@ -162,6 +180,13 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 	Email <input type="text" name="email">
 	Phone <input type="text" name="phone">
 	<input type="submit" value="Create Contact">
+</form>
+<form method="post">
+	<input type="hidden" name="formtype" value="createfeedback">
+	Name <input type="text" name="name">
+	Description <textarea name="description"></textarea>
+	Rating <input type="text" name="rating">
+	<input type="submit" value="Create Feedback">
 </form>
 <form method="post">
 	<input type="hidden" name="formtype" value="createrelationship">
@@ -183,6 +208,9 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 		foreach($contacts as $target){
 			echo('<option value="contact_'.$target['id'].'">'.$target['name'].'</option>');
 		}
+		foreach($feedbacks as $target){
+			echo('<option value="feedback_'.$target['id'].'">'.$target['name'].'</option>');
+		}
 		?>
 	</select>
 	<select name="b">
@@ -201,6 +229,9 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 		}
 		foreach($contacts as $target){
 			echo('<option value="contact_'.$target['id'].'">'.$target['name'].'</option>');
+		}
+		foreach($feedbacks as $target){
+			echo('<option value="feedback_'.$target['id'].'">'.$target['name'].'</option>');
 		}
 		?>
 	</select>
@@ -234,6 +265,8 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 					$child = $resources[$childId];
 				} elseif($childType == 'contact'){
 					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
 				}
 				echo('<div>Type: '.$type.' ChildType: '.$childType.' Name: '.$child['name'].'</div>');
 			}
@@ -258,6 +291,8 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 					$child = $resources[$childId];
 				} elseif($childType == 'contact'){
 					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
 				}
 				echo('<div>Type: '.$type.' ParentType: '.$childType.' Name: '.$child['name'].'</div>');
 			}
@@ -294,6 +329,8 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 					$child = $resources[$childId];
 				} elseif($childType == 'contact'){
 					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
 				}
 				echo('<div>Type: '.$type.' ChildType: '.$childType.' Name: '.$child['name'].'</div>');
 			}
@@ -318,6 +355,8 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 					$child = $resources[$childId];
 				} elseif($childType == 'contact'){
 					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
 				}
 				echo('<div>Type: '.$type.' ParentType: '.$childType.' Name: '.$child['name'].'</div>');
 			}
@@ -354,6 +393,8 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 					$child = $resources[$childId];
 				} elseif($childType == 'contact'){
 					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
 				}
 				echo('<div>Type: '.$type.' ChildType: '.$childType.' Name: '.$child['name'].'</div>');
 			}
@@ -378,6 +419,8 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 					$child = $resources[$childId];
 				} elseif($childType == 'contact'){
 					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
 				}
 				echo('<div>Type: '.$type.' ParentType: '.$childType.' Name: '.$child['name'].'</div>');
 			}
@@ -414,6 +457,8 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 					$child = $resources[$childId];
 				} elseif($childType == 'contact'){
 					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
 				}
 				echo('<div>Type: '.$type.' ChildType: '.$childType.' Name: '.$child['name'].'</div>');
 			}
@@ -438,6 +483,8 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 					$child = $resources[$childId];
 				} elseif($childType == 'contact'){
 					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
 				}
 				echo('<div>Type: '.$type.' ParentType: '.$childType.' Name: '.$child['name'].'</div>');
 			}
@@ -474,6 +521,8 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 					$child = $resources[$childId];
 				} elseif($childType == 'contact'){
 					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
 				}
 				echo('<div>Type: '.$type.' ChildType: '.$childType.' Name: '.$child['name'].'</div>');
 			}
@@ -498,6 +547,72 @@ if (mysqli_num_rows($relationshipResult) > 0) {
 					$child = $resources[$childId];
 				} elseif($childType == 'contact'){
 					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
+				}
+				echo('<div>Type: '.$type.' ParentType: '.$childType.' Name: '.$child['name'].'</div>');
+			}
+		}
+		echo('</div>');
+	}
+	?>
+</div>
+<div>Feedbacks</div>
+<div>
+	<?php
+	foreach($feedbacks as $feedback){
+		echo('<div>');
+		foreach($feedback as $key=>$value){
+			echo('<div>'.$key.': '.$value.'<div>');
+		}
+		echo('<form method="post"><input type="hidden" name="formtype" value="deletefeedback"><input type="hidden" name="id" value="'.$feedback['id'].'"><input type="submit" value="Delete"></form></div>');
+				echo('<div><div>Parent</div>');
+		if(isset($parentRelationships['feedback_'.$feedback['id']])){
+			echo('<div></div>');
+			foreach($parentRelationships['feedback_'.$feedback['id']] as $parent){
+				$type = $parent['type'];
+				$childType = $parent['b_type'];
+				$childId = $parent['b_id'];
+				$name = '';
+				$child = null;
+				if($childType == 'event'){
+					$child = $events[$childId];
+				} elseif($childType == 'organization'){
+					$child = $organizations[$childId];
+				} elseif($childType == 'location'){
+					$child = $locations[$childId];
+				} elseif($childType == 'resource'){
+					$child = $resources[$childId];
+				} elseif($childType == 'contact'){
+					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
+				}
+				echo('<div>Type: '.$type.' ChildType: '.$childType.' Name: '.$child['name'].'</div>');
+			}
+		}
+		echo('</div>');
+		echo('<div><div>Child</div>');
+		if(isset($childRelationships['feedback_'.$feedback['id']])){
+			echo('<div></div>');
+			foreach($childRelationships['feedback_'.$feedback['id']] as $parent){
+				$type = $parent['type'];
+				$childType = $parent['a_type'];
+				$childId = $parent['a_id'];
+				$name = '';
+				$child = null;
+				if($childType == 'event'){
+					$child = $events[$childId];
+				} elseif($childType == 'organization'){
+					$child = $organizations[$childId];
+				} elseif($childType == 'location'){
+					$child = $locations[$childId];
+				} elseif($childType == 'resource'){
+					$child = $resources[$childId];
+				} elseif($childType == 'contact'){
+					$child = $contacts[$childId];
+				} elseif($childType == 'feedback'){
+					$child = $feedbacks[$childId];
 				}
 				echo('<div>Type: '.$type.' ParentType: '.$childType.' Name: '.$child['name'].'</div>');
 			}
