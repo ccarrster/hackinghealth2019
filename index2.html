@@ -17,7 +17,7 @@
 		function suggestiondone(){
 			$('#content').html('Thanks for the event suggestion.');
 		}
-		
+
 		function suggestioncreated(){
 			var file = document.getElementById('fileBox').files[0]; //Files[0] = 1st file
 			if (file !== undefined) {
@@ -49,10 +49,10 @@
 		        url: 'upload.php',
 		        data: $data,
 		        success: function(response) {
-		        	
+
 		        },
 		        error: function(response) {
-		            
+
 		        },
 		        processData: false,
 		        contentType: false
@@ -77,16 +77,21 @@
 				reviewString += '</div>';
 				if(suggestion.imagepath != ''){
 					reviewString += '<div>';
-					reviewString += '<img src="uploads/'+suggestion.imagepath+'">';
+					reviewString += '<a href="uploads/'+suggestion.imagepath+'" target="_blank"><img src="uploads/'+suggestion.imagepath+'" style="max-width:300px; max-height: 300px;"></a>';
 					reviewString += '</div>';
 				}
-				
+
 			}
-			
+
 			$('#content').html(reviewString);
 		}
 
 	</script>
+	<style>
+	img {
+	    image-orientation: from-image;
+	}
+	</style>
 </head>
 <body>
 	<div id="menu">
