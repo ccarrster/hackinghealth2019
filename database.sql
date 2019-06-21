@@ -63,3 +63,13 @@ create table contact( id INT(11) NOT NULL AUTO_INCREMENT,
   updated_at DATETIME,
   PRIMARY KEY (id)
 );
+create table suggestion( id INT(11) NOT NULL AUTO_INCREMENT,
+  description text,
+  website text,
+  find text,
+  imagepath text,
+  status text,
+  created_at DATETIME,
+  updated_at DATETIME,
+  PRIMARY KEY (id)
+);

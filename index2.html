@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<script>
+		function suggestEvent(){
+			$('#content').html('<form><div><div>Website</div><div><input id="website" type="text" name="website"></div><div>Description</div><div><textarea id="description" name="description"></textarea></div><div>How did you find out about this event</div><div><textarea id="find" name="find"></textarea></div><div>Image</div><div><input id="fileBox" name="image" type="file"></div><div><input type="button" value="submit" onclick="suggestioncreated();"></div><div><input type="button" value="cancel" onclick="$(\'#content\').html(\'\');"></div></div></form>');
+		}
+		function getFile(filename){
+			var description = $('#description').val();
+			var website = $('#website').val();
+			var find = $('#find').val();
+			var imagepath = '';
+			$.post('api.php', {action: 'suggestevent', description: description, website: website, find: find, imagepath: filename}, suggestiondone);
+		}
+
+		function suggestiondone(){
+			$('#content').html('Thanks for the event suggestion.');
+		}
+		
+		function suggestioncreated(){
+			var reader = new FileReader();
+			var file = document.getElementById('fileBox').files[0]; //Files[0] = 1st file
+			if (file !== undefined) {
+				reader.onload = shipOff;
+			} else {
+				getFile('');
+			}
+		}
+		//reader.onloadstart = ...
+		//reader.onprogress = ... <-- Allows you to update a progress bar.
+		//reader.onabort = ...
+		//reader.onerror = ...
+		//reader.onloadend = ...
+
+		function uploaddone(data){
+			var result = JSON.parse(data);
+			getFile(result.serverFile);
+		}
+
+
+		function shipOff(event) {
+		    var result = event.target.result;
+		    var fileName = document.getElementById('fileBox').files[0].name; //Should be 'picture.jpg'
+		    //$.post('upload.php', { data: result, name: fileName }, uploaddone);
+
+			$.ajax({
+		        url: "upload.php",
+		        type: "POST",
+		        data: document.getElementById('fileBox').files[0],
+		        processData: false
+		    });
+		}
+
+		function reviewEvents(){
+			$.post('api.php', { action: 'reviewevents'}, reviewloaded);
+		}
+
+		function reviewloaded(data){
+			console.log(data);
+			var suggestions = JSON.parse(data);
+			var reviewString = '';
+			for(suggestionKey in suggestions){
+				var suggestion = suggestions[suggestionKey];
+				reviewString += '<div>';
+				reviewString += 'Descriptoin: '+suggestion.description;
+				reviewString += '</div>';
+				reviewString += '<div>';
+				reviewString += 'Website: '+suggestion.website;
+				reviewString += '</div>';
+				if(suggestion.imagepath != ''){
+					reviewString += '<div>';
+					reviewString += '<img src="uploads/'+suggestion.imagepath+'">';
+					reviewString += '</div>';
+				}
+				
+			}
+			
+			$('#content').html(reviewString);
+		}
+
+	</script>
+</head>
+<body>
+	<div id="menu">
+		<input type="button" value="Suggest Event" onclick="suggestEvent();">
+		<input type="button" value="Review Suggested Events" onclick="reviewEvents();">
+	</div>
+	<div id="content">
+	</div>
+</body>
+</html>
