@@ -19,10 +19,9 @@
 		}
 		
 		function suggestioncreated(){
-			var reader = new FileReader();
 			var file = document.getElementById('fileBox').files[0]; //Files[0] = 1st file
 			if (file !== undefined) {
-				reader.onload = shipOff;
+				shipOff();
 			} else {
 				getFile('');
 			}
@@ -39,16 +38,24 @@
 		}
 
 
-		function shipOff(event) {
-		    var result = event.target.result;
-		    var fileName = document.getElementById('fileBox').files[0].name; //Should be 'picture.jpg'
-		    //$.post('upload.php', { data: result, name: fileName }, uploaddone);
+		function shipOff() {
+			var $data = new FormData();
+		    $data.append('title', 'Sample Photo Title');
+		    $data.append('file', $("#fileBox").get(0).files[0]);
 
-			$.ajax({
-		        url: "upload.php",
-		        type: "POST",
-		        data: document.getElementById('fileBox').files[0],
-		        processData: false
+			// processData & contentType should be set to false
+		    $.ajax({
+		        type: 'POST',
+		        url: 'upload.php',
+		        data: $data,
+		        success: function(response) {
+		        	
+		        },
+		        error: function(response) {
+		            
+		        },
+		        processData: false,
+		        contentType: false
 		    });
 		}
 
@@ -63,7 +70,7 @@
 			for(suggestionKey in suggestions){
 				var suggestion = suggestions[suggestionKey];
 				reviewString += '<div>';
-				reviewString += 'Descriptoin: '+suggestion.description;
+				reviewString += 'Description: '+suggestion.description;
 				reviewString += '</div>';
 				reviewString += '<div>';
 				reviewString += 'Website: '+suggestion.website;

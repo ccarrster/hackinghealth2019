@@ -1,10 +1,6 @@
 <?php
-$fileName = 'cats.png';
-$serverFile = time().$fileName;
-$fp = fopen('uploads/'.$serverFile,'w'); //Prepends timestamp to prevent overwriting
-foreach($_POST as $data){
-	fwrite($fp, $data);
-}
-fclose($fp);
+$fileName = $_FILES['file']['name'];
+$serverFile = $fileName;
+copy($_FILES['file']['tmp_name'], 'uploads/'.$serverFile);
 $returnData = array( "serverFile" => $serverFile );
 echo json_encode($returnData);
