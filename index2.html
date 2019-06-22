@@ -2,6 +2,7 @@
 <html>
 <head>
 	<script src="js/jquery-3.4.1.min.js"></script>
+	<script src="js/load-image.all.min.js"></script>
 	<script>
 		function suggestEvent(){
 			$('#content').html('<form><div><div>Website</div><div><input id="website" type="text" name="website"></div><div>Description</div><div><textarea id="description" name="description"></textarea></div><div>How did you find out about this event</div><div><textarea id="find" name="find"></textarea></div><div>Image</div><div><input id="fileBox" name="image" type="file"></div><div><input type="button" value="submit" onclick="suggestioncreated();"></div><div><input type="button" value="cancel" onclick="$(\'#content\').html(\'\');"></div></div></form>');
@@ -62,10 +63,13 @@
 		function reviewEvents(){
 			$.post('api.php', { action: 'reviewevents'}, reviewloaded);
 		}
-
+		var funArr = [];
 		function reviewloaded(data){
-			console.log(data);
 			var suggestions = JSON.parse(data);
+			for(suggestionKey in suggestions){
+				eval("funArr[suggestionKey] = function(img, data){$('#image"+suggestionKey+"').html(img);}");
+			}
+			console.log(funArr);
 			var reviewString = '';
 			for(suggestionKey in suggestions){
 				var suggestion = suggestions[suggestionKey];
@@ -77,20 +81,22 @@
 				reviewString += '</div>';
 				if(suggestion.imagepath != ''){
 					reviewString += '<div>';
-					reviewString += '<a href="uploads/'+suggestion.imagepath+'" target="_blank"><img src="uploads/'+suggestion.imagepath+'" style="max-width:300px; max-height: 300px;"></a>';
+					reviewString += '<a id="image'+suggestionKey+'" href="uploads/'+suggestion.imagepath+'" target="_blank">';
+					loadImage(
+						"uploads/" + suggestion.imagepath,
+						eval('funArr['+suggestionKey+']'),
+						{ meta: true, orientation: true, maxWidth: 200, maxHeight: 200}
+					);
+					reviewString += '</a>';
 					reviewString += '</div>';
 				}
-
 			}
-
 			$('#content').html(reviewString);
 		}
 
+
 	</script>
 	<style>
-	img {
-	    image-orientation: from-image;
-	}
 	</style>
 </head>
 <body>
