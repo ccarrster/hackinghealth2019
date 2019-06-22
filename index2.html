@@ -87,6 +87,12 @@
 					reviewString += '</a>';
 					reviewString += '</div>';
 				}
+				reviewString += '<div>';
+				reviewString += '<input type="button" value="Create Event">';
+				reviewString += '<input type="button" value="Duplicate Event" onclick="duplicateEvent('+suggestionKey+')">';
+				reviewString += '<input type="button" value="Invalid Event" onclick="invalidEvent('+suggestionKey+')">';
+				reviewString += '<input type="button" value="Incomplete Event" onclick="incompleteEvent('+suggestionKey+')">';
+				reviewString += '</div>';
 				reviewString += '</div>';
 			}
 			if(reviewString == ''){
@@ -95,6 +101,24 @@
 			$('#content').html(reviewString);
 		}
 
+		function refresh(){
+		}
+
+		function createEvent(suggestionId){
+
+		}
+
+		function duplicateEvent(suggestionId){
+			$.post('api.php', {action: 'suggestionstatusupdate', id: suggestionId, status: 'duplicate'}, reviewEvents);
+		}
+
+		function invalidEvent(suggestionId){
+			$.post('api.php', {action: 'suggestionstatusupdate', id: suggestionId, status: 'invalid'}, reviewEvents);
+		}
+
+		function incompleteEvent(suggestionId){
+			$.post('api.php', {action: 'suggestionstatusupdate', id: suggestionId, status: 'incomplete'}, reviewEvents);
+		}
 
 	</script>
 	<style>
