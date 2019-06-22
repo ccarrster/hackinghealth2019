@@ -33,8 +33,7 @@
 		//reader.onerror = ...
 		//reader.onloadend = ...
 
-		function uploaddone(data){
-			var result = JSON.parse(data);
+		function uploaddone(result){
 			getFile(result.serverFile);
 		}
 
@@ -49,11 +48,9 @@
 		        type: 'POST',
 		        url: 'upload.php',
 		        data: $data,
-		        success: function(response) {
-
-		        },
+		        success: uploaddone,
 		        error: function(response) {
-
+					console.log(response);
 		        },
 		        processData: false,
 		        contentType: false
@@ -69,15 +66,15 @@
 			for(suggestionKey in suggestions){
 				eval("funArr[suggestionKey] = function(img, data){$('#image"+suggestionKey+"').html(img);}");
 			}
-			console.log(funArr);
 			var reviewString = '';
 			for(suggestionKey in suggestions){
 				var suggestion = suggestions[suggestionKey];
+				reviewString += '<div class="suggestion">';
 				reviewString += '<div>';
 				reviewString += 'Description: '+suggestion.description;
 				reviewString += '</div>';
 				reviewString += '<div>';
-				reviewString += 'Website: '+suggestion.website;
+				reviewString += 'Website: <a target="_blank" href="'+suggestion.website+'">'+suggestion.website+'</a>';
 				reviewString += '</div>';
 				if(suggestion.imagepath != ''){
 					reviewString += '<div>';
@@ -90,6 +87,10 @@
 					reviewString += '</a>';
 					reviewString += '</div>';
 				}
+				reviewString += '</div>';
+			}
+			if(reviewString == ''){
+				reviewString = 'No more new events to review. Go find and suggest some more!';
 			}
 			$('#content').html(reviewString);
 		}
@@ -97,6 +98,11 @@
 
 	</script>
 	<style>
+		.suggestion{
+			border: 1px solid black;
+			padding: 10px;
+			margin: 10px;
+		}
 	</style>
 </head>
 <body>
