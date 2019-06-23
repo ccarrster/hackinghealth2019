@@ -80,7 +80,7 @@ Make errors visible for now on page
 Define Users roles and filter views
 Rewards/stats for users
 Sponsored Events highlighted for money
-Someone could take you to events.
+Someone could take you to events for money.
 
 Known issues:
 Statuses of suggestions being deleted
