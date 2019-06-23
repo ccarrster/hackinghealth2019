@@ -68,3 +68,4 @@ Organization:
 Social Links
 URL
 
+https://serverfault.com/questions/563714/allow-linux-root-user-mysql-root-access-without-password
