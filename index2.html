@@ -56,13 +56,13 @@
 		        contentType: false
 		    });
 		}
-
+		var suggestions = null;
 		function reviewEvents(){
 			$.post('api.php', { action: 'reviewevents'}, reviewloaded);
 		}
 		var funArr = [];
 		function reviewloaded(data){
-			var suggestions = JSON.parse(data);
+			suggestions = JSON.parse(data);
 			for(suggestionKey in suggestions){
 				eval("funArr[suggestionKey] = function(img, data){$('#image"+suggestionKey+"').html(img);}");
 			}
@@ -88,7 +88,7 @@
 					reviewString += '</div>';
 				}
 				reviewString += '<div>';
-				reviewString += '<input type="button" value="Create Event">';
+				reviewString += '<input type="button" value="Create Event" onclick="startEvent('+suggestionKey+')">';
 				reviewString += '<input type="button" value="Duplicate Event" onclick="duplicateEvent('+suggestionKey+')">';
 				reviewString += '<input type="button" value="Invalid Event" onclick="invalidEvent('+suggestionKey+')">';
 				reviewString += '<input type="button" value="Incomplete Event" onclick="incompleteEvent('+suggestionKey+')">';
@@ -101,11 +101,41 @@
 			$('#content').html(reviewString);
 		}
 
-		function refresh(){
+		function getSuggestionString(suggestionKey){
+			reviewString = '';
+			var suggestion = suggestions[suggestionKey];
+			reviewString += '<div class="suggestion">';
+			reviewString += '<div>';
+			reviewString += 'Description: '+suggestion.description;
+			reviewString += '</div>';
+			reviewString += '<div>';
+			reviewString += 'Website: <a target="_blank" href="'+suggestion.website+'">'+suggestion.website+'</a>';
+			reviewString += '</div>';
+			if(suggestion.imagepath != ''){
+				reviewString += '<div>';
+				reviewString += '<a id="image'+suggestionKey+'" href="uploads/'+suggestion.imagepath+'" target="_blank">';
+				loadImage(
+					"uploads/" + suggestion.imagepath,
+					eval('funArr['+suggestionKey+']'),
+					{ meta: true, orientation: true, maxWidth: 200, maxHeight: 200}
+				);
+				reviewString += '</a>';
+				reviewString += '</div>';
+			}
+			reviewString += '<div>';
+			reviewString += '<input type="button" value="Create Event" onclick="startEvent('+suggestionKey+')">';
+			reviewString += '<input type="button" value="Duplicate Event" onclick="duplicateEvent('+suggestionKey+')">';
+			reviewString += '<input type="button" value="Invalid Event" onclick="invalidEvent('+suggestionKey+')">';
+			reviewString += '<input type="button" value="Incomplete Event" onclick="incompleteEvent('+suggestionKey+')">';
+			reviewString += '</div>';
+			reviewString += '</div>';
+			return reviewString;
 		}
 
-		function createEvent(suggestionId){
-
+		function startEvent(suggestionId){
+			var eventString = '';
+			eventString += getSuggestionString(suggestionId);
+			$('#content').html(eventString);
 		}
 
 		function duplicateEvent(suggestionId){
