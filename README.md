@@ -88,3 +88,18 @@ Statuses of suggestions being deleted
 
 Digital Ocean - Sets root to wierd auth and you need to fix it.
 https://serverfault.com/questions/563714/allow-linux-root-user-mysql-root-access-without-password
+
+Competition:
+https://allevents.in/manage/create.php?ref=eventlist-topbar
+
+https://www.kijiji.ca/b-events/ontario/c289l9004
+
+https://www.eventbrite.com/
+
+https://www.meetup.com/
+
+https://www.therecord.com/waterlooregion-events/
+
+https://www.kitchenerevents.ca/whats-on
+
+
