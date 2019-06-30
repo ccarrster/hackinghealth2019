@@ -163,14 +163,20 @@
 			createString += '<div><input name="age" type="text"></div>';
 			createString += '<div>Cost</div>';
 			createString += '<div><input name="cost" type="text"></div>';
-			createString += '<div><input type="button" value="Save Event" onclick="createEventInstance()"></div>';
+			createString += '<div><input type="button" value="Save Event" onclick="createEventInstance('+suggestionId+')"></div>';
 			createString += '</div></form>';
 			$('#content').html(eventString + createString);
 		}
 
-		function createEventInstance(){
-			$("#eventForm").ajaxSubmit({url: 'api.php', type: 'post'})
+		function createEventInstance(suggestionId){
+			$("#eventForm").ajaxSubmit({url: 'api.php', type: 'post', success: function (data) {
+				var eventId = JSON.parse(data);
+				var data = {action: 'createrelationship', type: 'createdfrom', 'a_type': 'event', 'a_id': eventId, 'b_type': 'suggestion', 'b_id': suggestionId};
+				$.post("api.php", data);
+    		}
+    		});
 		}
+
 
 		function startDateChanged(){
 			if($("#enddate").val() == ''){
