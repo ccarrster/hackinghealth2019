@@ -69,21 +69,8 @@ Social Links
 URL
 
 Ideas:
-One picture many events
-One picture series of events
-->New "Event series object?"
-Submit multiple pictures at once
-Save and create blank or Save and clone
-Quick type match existing locations/organizations etc.
-View of flow suggestion->events->validated->reviewed->Expired
-Make errors visible for now on page
-Define Users roles and filter views
-Rewards/stats for users
-Sponsored Events highlighted for money
-Someone could take you to events for money.
+Moved to github issues
 
-Known issues:
-Statuses of suggestions being deleted
 
 
 Digital Ocean - Sets root to wierd auth and you need to fix it.
