@@ -22,7 +22,7 @@ if(isset($_POST['action'])){
 	}
 
 	if($action == 'suggestionstatusupdate'){
-		$query = "update suggestion set status = '".mysqli_real_escape_string($link, $_POST['description'])."' where id = '".mysqli_real_escape_string($link, $_POST['id'])."';";
+		$query = "update suggestion set status = '".mysqli_real_escape_string($link, $_POST['status'])."' where id = '".mysqli_real_escape_string($link, $_POST['id'])."';";
 		$result = mysqli_query($link, $query);
 		echo(json_encode($result));
 	}
