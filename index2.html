@@ -3,6 +3,7 @@
 <head>
 	<script src="js/jquery-3.4.1.min.js"></script>
 	<script src="js/load-image.all.min.js"></script>
+	<script src="js/jquery.form.min.js"></script>
 	<script>
 		function suggestEvent(){
 			$('#content').html('<form><div><div>Website</div><div><input id="website" type="text" name="website"></div><div>Description</div><div><textarea id="description" name="description"></textarea></div><div>How did you find out about this event</div><div><textarea id="find" name="find"></textarea></div><div>Image</div><div><input id="fileBox" name="image" type="file"></div><div><input type="button" value="submit" onclick="suggestioncreated();"></div><div><input type="button" value="cancel" onclick="$(\'#content\').html(\'\');"></div></div></form>');
@@ -142,28 +143,40 @@
 			var eventString = '';
 			eventString += getSuggestionString(suggestionId);
 			createString = '';
-			createString += '<div>';
+			createString += '<form id="eventForm"><div>';
+			createString += '<input type="hidden" name="action" value="createevent">';
 			createString += '<div>Name</div>';
-			createString += '<div><input type="text"></div>';
+			createString += '<div><input name="name" type="text" value="'+suggestions[suggestionKey].description+'"></div>';
 			createString += '<div>Description</div>';
-			createString += '<div><textarea></textarea></div>';
+			createString += '<div><textarea name="description">'+suggestions[suggestionKey].description+'</textarea></div>';
 			createString += '<div>Website</div>';
-			createString += '<div><input type="text"></div>';
+			createString += '<div><input name="website" type="text" value="'+suggestions[suggestionKey].website+'"></div>';
 			createString += '<div>Start Date</div>';
-			createString += '<div><input type="date"></div>';
+			createString += '<div><input name="date" id="startdate" type="date" onchange="startDateChanged()"></div>';
 			createString += '<div>Start Time</div>';
-			createString += '<div>'+getTimeString('starttime')+'</div>';
+			createString += '<div>'+getTimeString('time')+'</div>';
 			createString += '<div>End Date</div>';
-			createString += '<div><input type="date"></div>';
+			createString += '<div><input name="enddate" id="enddate" type="date"></div>';
 			createString += '<div>End Time</div>';
 			createString += '<div>'+getTimeString('endtime')+'</div>';
 			createString += '<div>Age</div>';
-			createString += '<div><input type="text"></div>';
+			createString += '<div><input name="age" type="text"></div>';
 			createString += '<div>Cost</div>';
-			createString += '<div><input type="text"></div>';
-			createString += '<div><input type="button" value="Save Event"></div>';
-			createString += '</div>';
+			createString += '<div><input name="cost" type="text"></div>';
+			createString += '<div><input type="button" value="Save Event" onclick="createEventInstance()"></div>';
+			createString += '</div></form>';
 			$('#content').html(eventString + createString);
+		}
+
+		function createEventInstance(){
+			$("#eventForm").ajaxSubmit({url: 'api.php', type: 'post'})
+		}
+
+		function startDateChanged(){
+			if($("#enddate").val() == ''){
+				$("#enddate").val($("#startdate").val());
+			}
+
 		}
 
 		function setTimeValue(id, value){
@@ -171,9 +184,9 @@
 		}
 
 		function getTimeString(id){
-			var result = "<div><form>";
+			var result = "<div>";
 			result += '<div>';
-			result += '<input id="'+id+'" type="time" name="appt-time" step="900">';
+			result += '<input id="'+id+'" type="time" name="'+id+'" step="900">';
 			result += '</div>';
 			result += '<div>';
 			for(var i = 0; i <= 11; i++){
@@ -200,7 +213,7 @@
 			result += '<div>';
 			result += '<input type="button" value="Clear" onclick="$(\'#'+id+'\').val(\'\')">';
 			result += '</div>';
-			result += '</form></div>';
+			result += '</div>';
 			return result;
 		}
 

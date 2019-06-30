@@ -33,6 +33,24 @@ if(isset($_POST['action'])){
 		echo(json_encode($events));
 	}
 
+	if($action == 'createevent'){
+		$date = $_POST['date'];
+		$time = $_POST['time'];
+		$start = 'null';
+		if($date != '' && $time != ''){
+			$start = $date . ' ' . $time . ':00';
+		}
+		$enddate = $_POST['enddate'];
+		$endtime = $_POST['endtime'];
+		$end = 'null';
+		if($enddate != '' && $endtime != ''){
+			$end = $enddate . ' ' . $endtime . ':00';
+		}
+		$query = "insert into event (name, description, website, start, end, age, cost, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."',  '".mysqli_real_escape_string($link, $_POST['website'])."', '".mysqli_real_escape_string($link, $start)."', '".mysqli_real_escape_string($link, $end)."', '".mysqli_real_escape_string($link, $_POST['age'])."', '".mysqli_real_escape_string($link, $_POST['cost'])."', now(), now());";
+		var_dump($query);
+		mysqli_query($link, $query);
+	}
+
 
 	if($action == 'suggestionstatusupdate'){
 		$query = "update suggestion set status = '".mysqli_real_escape_string($link, $_POST['status'])."' where id = '".mysqli_real_escape_string($link, $_POST['id'])."';";
