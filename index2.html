@@ -172,7 +172,11 @@
 			$("#eventForm").ajaxSubmit({url: 'api.php', type: 'post', success: function (data) {
 				var eventId = JSON.parse(data);
 				var data = {action: 'createrelationship', type: 'createdfrom', 'a_type': 'event', 'a_id': eventId, 'b_type': 'suggestion', 'b_id': suggestionId};
-				$.post("api.php", data);
+				$.post("api.php", data, function(results){
+					$.post('api.php', {action: 'suggestionstatusupdate', id: suggestionId, status: 'created'});
+					$('#content').html('Event Created from suggestion.');
+				}
+				);
     		}
     		});
 		}
