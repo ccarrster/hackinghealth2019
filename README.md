@@ -5,7 +5,7 @@ http://68.183.206.33/
 
 Run database.sql in mysql to create database and tables
 Open edit.php
-Modify the database connection password to your own.
+Modify the database connection password to your own in exit.php and api.php.
 Browse to edit.php and you can create and remove Events, Organizations, Locations, Contacts, Relationships and Resources.
 Relationships link two events(Date Time get together) are relaited. Maybe an organization(Group) is hosting an event. Maybe an event is at a location(Address). Maybe that location has a resource(kitchen, diabled washroom)
 
@@ -67,9 +67,6 @@ Sub Location (Upper Level, Round back etc)
 Organization:
 Social Links
 URL
-
-Ideas:
-Moved to github issues
 
 
 
