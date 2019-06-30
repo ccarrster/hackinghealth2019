@@ -21,6 +21,19 @@ if(isset($_POST['action'])){
 		echo(json_encode($events));
 	}
 
+	if($action == 'reviewsuggestions'){
+		$events = [];
+		$query = "select * from suggestion;";
+		$result = mysqli_query($link, $query);
+		if (mysqli_num_rows($result) > 0) {
+			while($row = mysqli_fetch_assoc($result)) {
+				$events[$row['id']] = $row;
+			}
+		}
+		echo(json_encode($events));
+	}
+
+
 	if($action == 'suggestionstatusupdate'){
 		$query = "update suggestion set status = '".mysqli_real_escape_string($link, $_POST['status'])."' where id = '".mysqli_real_escape_string($link, $_POST['id'])."';";
 		$result = mysqli_query($link, $query);

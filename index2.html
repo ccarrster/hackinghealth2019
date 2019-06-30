@@ -60,6 +60,9 @@
 		function reviewEvents(){
 			$.post('api.php', { action: 'reviewevents'}, reviewloaded);
 		}
+		function reviewSuggestions(){
+			$.post('api.php', { action: 'reviewsuggestions'}, reviewloaded);
+		}
 		var funArr = [];
 		function reviewloaded(data){
 			suggestions = JSON.parse(data);
@@ -70,6 +73,9 @@
 			for(suggestionKey in suggestions){
 				var suggestion = suggestions[suggestionKey];
 				reviewString += '<div class="suggestion">';
+				reviewString += '<div>';
+				reviewString += 'Status: '+suggestion.status;
+				reviewString += '</div>';
 				reviewString += '<div>';
 				reviewString += 'Description: '+suggestion.description;
 				reviewString += '</div>';
@@ -135,7 +141,67 @@
 		function startEvent(suggestionId){
 			var eventString = '';
 			eventString += getSuggestionString(suggestionId);
-			$('#content').html(eventString);
+			createString = '';
+			createString += '<div>';
+			createString += '<div>Name</div>';
+			createString += '<div><input type="text"></div>';
+			createString += '<div>Description</div>';
+			createString += '<div><textarea></textarea></div>';
+			createString += '<div>Website</div>';
+			createString += '<div><input type="text"></div>';
+			createString += '<div>Start Date</div>';
+			createString += '<div><input type="date"></div>';
+			createString += '<div>Start Time</div>';
+			createString += '<div>'+getTimeString('starttime')+'</div>';
+			createString += '<div>End Date</div>';
+			createString += '<div><input type="date"></div>';
+			createString += '<div>End Time</div>';
+			createString += '<div>'+getTimeString('endtime')+'</div>';
+			createString += '<div>Age</div>';
+			createString += '<div><input type="text"></div>';
+			createString += '<div>Cost</div>';
+			createString += '<div><input type="text"></div>';
+			createString += '<div><input type="button" value="Save Event"></div>';
+			createString += '</div>';
+			$('#content').html(eventString + createString);
+		}
+
+		function setTimeValue(id, value){
+			$('#'+id).val(value);
+		}
+
+		function getTimeString(id){
+			var result = "<div><form>";
+			result += '<div>';
+			result += '<input id="'+id+'" type="time" name="appt-time" step="900">';
+			result += '</div>';
+			result += '<div>';
+			for(var i = 0; i <= 11; i++){
+				var stringValue = i;
+				if(stringValue == 0){
+					stringValue = 12;
+				}
+				for(var j = 0; j < 60; j += 15){
+					result += '<input type="button" name="hour" value="'+stringValue+':'+j.toString().padStart(2, '0')+' AM" onclick="setTimeValue(\''+id+'\', \''+i.toString().padStart(2, '0')+':'+j.toString().padStart(2, '0')+'\')">';
+				}
+			}
+			result += '</div>';
+			result += '<div>';
+			for(var i = 0; i <= 11; i++){
+				var stringValue = i;
+				if(stringValue == 0){
+					stringValue = 12;
+				}
+				for(var j = 0; j < 60; j += 15){
+					result += '<input type="button" name="hour" value="'+stringValue+':'+j.toString().padStart(2, '0')+' PM" onclick="setTimeValue(\''+id+'\', \''+(i + 12).toString().padStart(2, '0')+':'+j.toString().padStart(2, '0')+'\')">';
+				}
+			}
+			result += '<div>';
+			result += '<div>';
+			result += '<input type="button" value="Clear" onclick="$(\'#'+id+'\').val(\'\')">';
+			result += '</div>';
+			result += '</form></div>';
+			return result;
 		}
 
 		function duplicateEvent(suggestionId){
@@ -163,6 +229,7 @@
 	<div id="menu">
 		<input type="button" value="Suggest Event" onclick="suggestEvent();">
 		<input type="button" value="Review Suggested Events" onclick="reviewEvents();">
+		<input type="button" value="Review All Suggestions" onclick="reviewSuggestions();">
 	</div>
 	<div id="content">
 	</div>
