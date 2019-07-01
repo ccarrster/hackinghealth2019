@@ -61,6 +61,38 @@
 		function reviewEvents(){
 			$.post('api.php', { action: 'reviewevents'}, reviewloaded);
 		}
+
+		function viewEvents(){
+			$.post('api.php', { action: 'viewEvents'}, viewloaded);
+		}
+
+		function viewloaded(data){
+			var events = JSON.parse(data);
+			var eventsString = '';
+			for(eventKey in events){
+				var event = events[eventKey];
+				eventsString += '<div class="event">';
+				eventsString += '<div>Id</div>';
+				eventsString += '<div>'+event.id+'</div>';
+				eventsString += '<div>Name</div>';
+				eventsString += '<div>'+event.name+'</div>';
+				eventsString += '<div>Description</div>';
+				eventsString += '<div>'+event.description+'</div>';
+				eventsString += '<div>Start</div>';
+				eventsString += '<div>'+event.start+'</div>';
+				eventsString += '<div>End</div>';
+				eventsString += '<div>'+event.end+'</div>';
+				eventsString += '<div>Website</div>';
+				eventsString += '<div>'+event.website+'</div>';
+				eventsString += '<div>Age</div>';
+				eventsString += '<div>'+event.age+'</div>';
+				eventsString += '<div>Cost</div>';
+				eventsString += '<div>'+event.cost+'</div>';
+				eventsString += '</div>';
+			}
+			$("#content").html(eventsString);
+		}
+
 		function reviewSuggestions(){
 			$.post('api.php', { action: 'reviewsuggestions'}, reviewloaded);
 		}
@@ -201,6 +233,7 @@
 			}});
 		}
 
+
 		function createOrganization(type, id){
 			var organizationString = '';
 			organizationString += '<div><form id="organizationForm">';
@@ -297,7 +330,7 @@
 
 	</script>
 	<style>
-		.suggestion{
+		.suggestion, .event{
 			border: 1px solid black;
 			padding: 10px;
 			margin: 10px;
@@ -309,6 +342,7 @@
 		<input type="button" value="Suggest Event" onclick="suggestEvent();">
 		<input type="button" value="Review Suggested Events" onclick="reviewEvents();">
 		<input type="button" value="Review All Suggestions" onclick="reviewSuggestions();">
+		<input type="button" value="Review All Events" onclick="viewEvents();">
 	</div>
 	<div id="content">
 	</div>

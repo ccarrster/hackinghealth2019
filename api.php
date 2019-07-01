@@ -33,6 +33,19 @@ if(isset($_POST['action'])){
 		echo(json_encode($events));
 	}
 
+	if($action == 'viewEvents'){
+		$events = [];
+		$query = "select * from event;";
+		$result = mysqli_query($link, $query);
+		if (mysqli_num_rows($result) > 0) {
+			while($row = mysqli_fetch_assoc($result)) {
+				$events[$row['id']] = $row;
+			}
+		}
+		echo(json_encode($events));
+	}
+
+
 	if($action == 'createevent'){
 		$date = $_POST['date'];
 		$time = $_POST['time'];
