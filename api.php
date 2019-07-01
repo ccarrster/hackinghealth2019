@@ -38,26 +38,38 @@ if(isset($_POST['action'])){
 		$time = $_POST['time'];
 		$start = 'null';
 		if($date != '' && $time != ''){
-			$start = $date . ' ' . $time . ':00';
+			$start = "'".$date . ' ' . $time . ':00'."'";
 		}
 		$enddate = $_POST['enddate'];
 		$endtime = $_POST['endtime'];
 		$end = 'null';
 		if($enddate != '' && $endtime != ''){
-			$end = $enddate . ' ' . $endtime . ':00';
+			$end = "'".$enddate . ' ' . $endtime . ':00'."'";
 		}
-		$query = "insert into event (name, description, website, start, end, age, cost, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."',  '".mysqli_real_escape_string($link, $_POST['website'])."', '".mysqli_real_escape_string($link, $start)."', '".mysqli_real_escape_string($link, $end)."', '".mysqli_real_escape_string($link, $_POST['age'])."', '".mysqli_real_escape_string($link, $_POST['cost'])."', now(), now());";
+		$query = "insert into event (name, description, website, start, end, age, cost, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."',  '".mysqli_real_escape_string($link, $_POST['website'])."', ".mysqli_real_escape_string($link, $start).", ".mysqli_real_escape_string($link, $end).", '".mysqli_real_escape_string($link, $_POST['age'])."', '".mysqli_real_escape_string($link, $_POST['cost'])."', now(), now());";
+		mysqli_query($link, $query);
+		echo(json_encode(mysqli_insert_id($link)));
+	}
+
+	if($action == 'createorganization'){
+		$query = "insert into organization (name, description, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', now(), now());";
 		mysqli_query($link, $query);
 		echo(json_encode(mysqli_insert_id($link)));
 	}
 
 	if($action == 'createrelationship'){
-			$a_type = $_POST['a_type'];
-			$a_id = $_POST['a_id'];
-			$b_type = $_POST['b_type'];
-			$b_id = $_POST['b_id'];
-			$query = "insert into relationship (type, a_type, a_id, b_type, b_id, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['type'])."', '".mysqli_real_escape_string($link, $a_type)."', '".mysqli_real_escape_string($link, $a_id)."', '".mysqli_real_escape_string($link, $b_type)."', '".mysqli_real_escape_string($link, $b_id)."', now(), now());";
-			mysqli_query($link, $query);
+		$a_type = $_POST['a_type'];
+		$a_id = $_POST['a_id'];
+		$b_type = $_POST['b_type'];
+		$b_id = $_POST['b_id'];
+		$query = "insert into relationship (type, a_type, a_id, b_type, b_id, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['type'])."', '".mysqli_real_escape_string($link, $a_type)."', '".mysqli_real_escape_string($link, $a_id)."', '".mysqli_real_escape_string($link, $b_type)."', '".mysqli_real_escape_string($link, $b_id)."', now(), now());";
+		mysqli_query($link, $query);
+	}
+
+	if($action == 'createlocation'){
+		$query = "insert into location (name, description, street, city, province, postal, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', '".mysqli_real_escape_string($link, $_POST['street'])."', '".mysqli_real_escape_string($link, $_POST['city'])."', '".mysqli_real_escape_string($link, $_POST['province'])."', '".mysqli_real_escape_string($link, $_POST['postal'])."', now(), now());";
+		$result = mysqli_query($link, $query);
+		echo(json_encode(mysqli_insert_id($link)));
 	}
 
 

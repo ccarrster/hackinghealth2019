@@ -168,13 +168,69 @@
 			$('#content').html(eventString + createString);
 		}
 
+		function createLocation(type, id){
+			var locationString = '';
+			locationString += '<div><form id="locationForm">';
+			locationString += '<input type="hidden" name="action" value="createlocation">';
+			locationString += '<div>Name</div>';
+			locationString += '<div><input name="name" type="text"></div>';
+			locationString += '<div>Description</div>';
+			locationString += '<div><input name="description" type="text"></div>';
+			locationString += '<div>Street</div>';
+			locationString += '<div><input name="street" type="text"></div>';
+			locationString += '<div>City</div>';
+			locationString += '<div><input name="city" type="text"></div>';
+			locationString += '<div>Province</div>';
+			locationString += '<div><input name="province" type="text"></div>';
+			locationString += '<div>Postal</div>';
+			locationString += '<div><input name="postal" type="text"></div>';
+			locationString += '<div><input type="button" value="Save Location" onclick="saveLocation(\''+type+'\', '+id+')"></div>';
+			locationString += '</form></div>';
+			$('#content').html(locationString);
+		}
+		function saveLocation(type, id){
+			var locationRelationType = type;
+			var locationRelationId = id;
+			$("#locationForm").ajaxSubmit({url: 'api.php', type: 'post', success: function (data) {
+				var locationId = JSON.parse(data);
+				var data = {action: 'createrelationship', type: 'atlocation', 'a_type': locationRelationType, 'a_id': locationRelationId, 'b_type': 'location', 'b_id': locationId};
+				$.post("api.php", data, function(results){
+					$('#content').html('Location Created for event.');
+				}
+				);
+			}});
+		}
+
+		function createOrganization(type, id){
+			var organizationString = '';
+			organizationString += '<div><form id="organizationForm">';
+			organizationString += '<input type="hidden" name="action" value="createorganization">';
+			organizationString += '<div>Name</div>';
+			organizationString += '<div><input name="name" type="text"></div>';
+			organizationString += '<div>Description</div>';
+			organizationString += '<div><input name="description" type="text"></div>';
+			organizationString += '<div><input type="button" value="Save Organization" onclick="saveOrganization(\''+type+'\', '+id+')"></div>';
+			organizationString += '</form></div>';
+			$('#content').html(organizationString);
+		}
+		function saveOrganization(type, id){
+			$("#organizationForm").ajaxSubmit({url: 'api.php', type: 'post', success: function (data) {
+				var organizationId = JSON.parse(data);
+				var data = {action: 'createrelationship', type: 'hostedby', 'a_type': type, 'a_id': id, 'b_type': 'organization', 'b_id': organizationId};
+				$.post("api.php", data, function(results){
+					$('#content').html('Event hosted by Organization');
+				}
+				);
+			}});
+		}
+
 		function createEventInstance(suggestionId){
 			$("#eventForm").ajaxSubmit({url: 'api.php', type: 'post', success: function (data) {
 				var eventId = JSON.parse(data);
 				var data = {action: 'createrelationship', type: 'createdfrom', 'a_type': 'event', 'a_id': eventId, 'b_type': 'suggestion', 'b_id': suggestionId};
 				$.post("api.php", data, function(results){
 					$.post('api.php', {action: 'suggestionstatusupdate', id: suggestionId, status: 'created'});
-					$('#content').html('Event Created from suggestion.');
+					$('#content').html('Event Created from suggestion. <input type="button" value="Set Event Location" onclick="createLocation(\'event\', \''+eventId+'\')"> <input type="button" value="Set Event Organization" onclick="createOrganization(\'event\', \''+eventId+'\')">');
 				}
 				);
     		}
