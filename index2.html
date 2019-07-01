@@ -66,6 +66,54 @@
 			$.post('api.php', { action: 'viewEvents'}, viewloaded);
 		}
 
+		function getLocation(id){
+			$.post('api.php', { action: 'getlocation', id: id}, viewlocation);
+		}
+
+		function viewlocation(data){
+			locations = JSON.parse(data);
+			for(locationKey in locations){
+				var location = locations[locationKey];
+				var locationString = '';
+				locationString += "<div class='location'>";
+				locationString += "<div>Name</div>";
+				locationString += "<div>"+location.name+"</div>";
+				locationString += "<div>Description</div>";
+				locationString += "<div>"+location.description+"</div>";
+				locationString += "<div>Street</div>";
+				locationString += "<div>"+location.street+"</div>";
+				locationString += "<div>City</div>";
+				locationString += "<div>"+location.city+"</div>";
+				locationString += "<div>Province</div>";
+				locationString += "<div>"+location.province+"</div>";
+				locationString += "<div>Postal</div>";
+				locationString += "<div>"+location.postal+"</div>";
+				locationString += "</div>";
+				$('.location'+location.id).html(locationString);
+			}
+		}
+
+		function viewsuggestion(data){
+			suggestions = JSON.parse(data);
+			for(suggestionKey in suggestions){
+				var suggestion = suggestions[suggestionKey];
+				var suggestionString = '';
+				suggestionString += "<div class='suggestion'>";
+				suggestionString += '<div>Id</div>';
+				suggestionString += '<div>'+suggestion.id+'</div>';
+				suggestionString += '<div>Description</div>';
+				suggestionString += '<div>'+suggestion.description+'</div>';
+				suggestionString += '<div>Find</div>';
+				suggestionString += '<div>'+suggestion.find+'</div>';
+				suggestionString += '<div>Imagepath</div>';
+				suggestionString += '<div>'+suggestion.imagepath+'</div>';
+				suggestionString += '<div>Status</div>';
+				suggestionString += '<div>'+suggestion.status+'</div>';
+				suggestionString += "</div>";
+				$('.suggestion'+suggestion.id).html(suggestionString);
+			}
+		}
+
 		function viewloaded(data){
 			var events = JSON.parse(data);
 			var eventsString = '';
@@ -88,7 +136,9 @@
 				eventsString += '<div>'+event.age+'</div>';
 				eventsString += '<div>Cost</div>';
 				eventsString += '<div>'+event.cost+'</div>';
+				eventsString += '<div id="relationships'+event.id+'"></div>';
 				eventsString += '</div>';
+				getRelations(event.id, 'event');
 			}
 			$("#content").html(eventsString);
 		}
@@ -138,6 +188,10 @@
 				reviewString = 'No more new events to review. Go find and suggest some more!';
 			}
 			$('#content').html(reviewString);
+		}
+
+		function getSuggestion(id){
+			$.post('api.php', { action: 'getsuggestion', id: id}, viewsuggestion);
 		}
 
 		function getSuggestionString(suggestionKey){
@@ -271,11 +325,32 @@
 		}
 
 
+		function getRelations(id, type){
+			$.post('api.php', { action: 'getrelations', id: id, type: type}, viewrelations);
+		}
+
+		function viewrelations(data){
+			var relations = JSON.parse(data);
+			for(relationsKey in relations){
+				var relation = relations[relationsKey];
+				if(relation.type == 'createdfrom'){
+					$('#relationships'+relation.a_id).append('<div class="suggestion'+relation.b_id+'"></div>');
+					getSuggestion(relation.b_id);
+				}
+				if(relation.type == 'atlocation'){
+					$('#relationships'+relation.a_id).append('<div class="location'+relation.b_id+'"></div>');
+					getLocation(relation.b_id);
+				}
+				if(relation.type == 'hostedby'){
+					$('#relationships'+relation.a_id).append('<div>Hosted by '+relation.b_id+'</div>');
+				}
+			}
+		}
+
 		function startDateChanged(){
 			if($("#enddate").val() == ''){
 				$("#enddate").val($("#startdate").val());
 			}
-
 		}
 
 		function setTimeValue(id, value){
@@ -330,7 +405,7 @@
 
 	</script>
 	<style>
-		.suggestion, .event{
+		.suggestion, .event, .location{
 			border: 1px solid black;
 			padding: 10px;
 			margin: 10px;

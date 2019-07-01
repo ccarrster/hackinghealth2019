@@ -45,6 +45,41 @@ if(isset($_POST['action'])){
 		echo(json_encode($events));
 	}
 
+	if($action == 'getrelations'){
+		$relations = [];
+		$query = "select * from relationship where (a_id = '".mysqli_real_escape_string($link, $_POST['id'])."' and a_type = '".mysqli_real_escape_string($link, $_POST['type'])."') OR (b_id = '".mysqli_real_escape_string($link, $_POST['id'])."' and b_type = '".mysqli_real_escape_string($link, $_POST['type'])."');";
+		$result = mysqli_query($link, $query);
+		if (mysqli_num_rows($result) > 0) {
+			while($row = mysqli_fetch_assoc($result)) {
+				$relations[$row['id']] = $row;
+			}
+		}
+		echo(json_encode($relations));
+	}
+
+	if($action == 'getlocation'){
+		$locations = [];
+		$query = "select * from location where id = '".mysqli_real_escape_string($link, $_POST['id'])."';";
+		$result = mysqli_query($link, $query);
+		if (mysqli_num_rows($result) > 0) {
+			while($row = mysqli_fetch_assoc($result)) {
+				$locations[$row['id']] = $row;
+			}
+		}
+		echo(json_encode($locations));
+	}
+
+	if($action == 'getsuggestion'){
+		$suggestions = [];
+		$query = "select * from suggestion where id = '".mysqli_real_escape_string($link, $_POST['id'])."';";
+		$result = mysqli_query($link, $query);
+		if (mysqli_num_rows($result) > 0) {
+			while($row = mysqli_fetch_assoc($result)) {
+				$suggestions[$row['id']] = $row;
+			}
+		}
+		echo(json_encode($suggestions));
+	}
 
 	if($action == 'createevent'){
 		$date = $_POST['date'];
