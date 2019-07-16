@@ -257,6 +257,14 @@
 
 		function createLocation(type, id){
 			var locationString = '';
+			locationString += '<div><form id="locationselectForm">';
+			locationString += '<input type="hidden" name="action" value="selectlocation">';
+			locationString += '<div>Name</div>';
+			locationString += '<div><select name="id" id="locationselect">';
+			//Populate locations
+			locationString += '</select></div>';
+			locationString += '<div><input type="button" value="Select Location" onclick="selectLocation(\''+type+'\', '+id+')"></div>';
+			locationString += '</form></div>';
 			locationString += '<div><form id="locationForm">';
 			locationString += '<input type="hidden" name="action" value="createlocation">';
 			locationString += '<div>Name</div>';
@@ -274,7 +282,26 @@
 			locationString += '<div><input type="button" value="Save Location" onclick="saveLocation(\''+type+'\', '+id+')"></div>';
 			locationString += '</form></div>';
 			$('#content').html(locationString);
+			var data = {action: 'getlocations'};
+			$.post('api.php', data, function(data){
+				var locations = JSON.parse(data);
+				for(locationKey in locations){
+					var location = locations[locationKey];
+					$("#locationselect").append('<option value="'+locationKey+'">'+location.name+'</option>');
+				}
+			});
 		}
+
+		function selectLocation(type, id){
+			var locationRelationType = type;
+			var locationRelationId = id;
+			var locationId = $("#locationselect option:selected").val();
+			var data = {action: 'createrelationship', type: 'atlocation', 'a_type': locationRelationType, 'a_id': locationRelationId, 'b_type': 'location', 'b_id': locationId};
+			$.post("api.php", data, function(results){
+				$('#content').html('Location Created for event.');
+			});
+		}
+
 		function saveLocation(type, id){
 			var locationRelationType = type;
 			var locationRelationId = id;

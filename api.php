@@ -69,6 +69,18 @@ if(isset($_POST['action'])){
 		echo(json_encode($locations));
 	}
 
+	if($action == 'getlocations'){
+		$locations = [];
+		$query = "select * from location;";
+		$result = mysqli_query($link, $query);
+		if (mysqli_num_rows($result) > 0) {
+			while($row = mysqli_fetch_assoc($result)) {
+				$locations[$row['id']] = $row;
+			}
+		}
+		echo(json_encode($locations));
+	}
+
 	if($action == 'getsuggestion'){
 		$suggestions = [];
 		$query = "select * from suggestion where id = '".mysqli_real_escape_string($link, $_POST['id'])."';";
