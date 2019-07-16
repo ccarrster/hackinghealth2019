@@ -249,7 +249,8 @@
 			createString += '<div><input name="age" type="text"></div>';
 			createString += '<div>Cost</div>';
 			createString += '<div><input name="cost" type="text"></div>';
-			createString += '<div><input type="button" value="Save Event" onclick="createEventInstance('+suggestionId+')"></div>';
+			createString += '<div><input type="button" value="Save Event" onclick="createEventInstance('+suggestionId+', false)"></div>';
+			createString += '<div><input type="button" value="Save And Create Another Event" onclick="createEventInstance('+suggestionId+', true)"></div>';
 			createString += '</div></form>';
 			$('#content').html(eventString + createString);
 		}
@@ -311,13 +312,41 @@
 			}});
 		}
 
-		function createEventInstance(suggestionId){
+		function createSeries(type, id){
+			var seriesString = '';
+			seriesString += '<div><form id="seriesForm">';
+			seriesString += '<input type="hidden" name="action" value="createseries">';
+			seriesString += '<div>Name</div>';
+			seriesString += '<div><input name="name" type="text"></div>';
+			seriesString += '<div>Description</div>';
+			seriesString += '<div><input name="description" type="text"></div>';
+			seriesString += '<div><input type="button" value="Save Series" onclick="saveSeries(\''+type+'\', '+id+')"></div>';
+			seriesString += '</form></div>';
+			$('#content').html(seriesString);
+		}
+		function saveSeries(type, id){
+			$("#seriesForm").ajaxSubmit({url: 'api.php', type: 'post', success: function (data) {
+				var seriesId = JSON.parse(data);
+				var data = {action: 'createrelationship', type: 'inseries', 'a_type': type, 'a_id': id, 'b_type': 'series', 'b_id': seriesId};
+				$.post("api.php", data, function(results){
+					$('#content').html('Event part of series');
+				}
+				);
+			}});
+		}
+
+		
+		function createEventInstance(suggestionId, createAnother){
 			$("#eventForm").ajaxSubmit({url: 'api.php', type: 'post', success: function (data) {
 				var eventId = JSON.parse(data);
 				var data = {action: 'createrelationship', type: 'createdfrom', 'a_type': 'event', 'a_id': eventId, 'b_type': 'suggestion', 'b_id': suggestionId};
 				$.post("api.php", data, function(results){
 					$.post('api.php', {action: 'suggestionstatusupdate', id: suggestionId, status: 'created'});
-					$('#content').html('Event Created from suggestion. <input type="button" value="Set Event Location" onclick="createLocation(\'event\', \''+eventId+'\')"> <input type="button" value="Set Event Organization" onclick="createOrganization(\'event\', \''+eventId+'\')">');
+					if(!createAnother){
+						$('#content').html('Event Created from suggestion. <input type="button" value="Set Event Location" onclick="createLocation(\'event\', \''+eventId+'\')"> <input type="button" value="Set Event Organization" onclick="createOrganization(\'event\', \''+eventId+'\')"> <input type="button" value="Set Event Series" onclick="createSeries(\'event\', \''+eventId+'\')">');
+					} else {
+						startEvent(suggestionId);
+					}
 				}
 				);
     		}
@@ -344,6 +373,10 @@
 				if(relation.type == 'hostedby'){
 					$('#relationships'+relation.a_id).append('<div>Hosted by '+relation.b_id+'</div>');
 				}
+				if(relation.type == 'inseries'){
+					$('#relationships'+relation.a_id).append('<div>In series '+relation.b_id+'</div>');
+				}
+				
 			}
 		}
 

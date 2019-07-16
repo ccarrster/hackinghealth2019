@@ -30,6 +30,13 @@ create table organization( id INT(11) NOT NULL AUTO_INCREMENT,
   updated_at DATETIME,
   PRIMARY KEY (id)
 );
+create table series( id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(200) NOT NULL,
+  description text,
+  created_at DATETIME,
+  updated_at DATETIME,
+  PRIMARY KEY (id)
+);
 create table resource( id INT(11) NOT NULL AUTO_INCREMENT,
   name VARCHAR(200) NOT NULL,
   description text,

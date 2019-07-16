@@ -105,6 +105,12 @@ if(isset($_POST['action'])){
 		echo(json_encode(mysqli_insert_id($link)));
 	}
 
+	if($action == 'createseries'){
+		$query = "insert into series (name, description, updated_at, created_at) values('".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['description'])."', now(), now());";
+		mysqli_query($link, $query);
+		echo(json_encode(mysqli_insert_id($link)));
+	}
+
 	if($action == 'createrelationship'){
 		$a_type = $_POST['a_type'];
 		$a_id = $_POST['a_id'];
