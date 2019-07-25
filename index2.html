@@ -292,6 +292,16 @@
 			});
 		}
 
+		function selectOrganization(type, id){
+			var organizationRelationType = type;
+			var organizationRelationId = id;
+			var organizationId = $("#organizationselect option:selected").val();
+			var data = {action: 'createrelationship', type: 'hostedby', 'a_type': organizationRelationType, 'a_id': organizationRelationId, 'b_type': 'organization', 'b_id': organizationId};
+			$.post("api.php", data, function(results){
+				$('#content').html('Organization Created for event.');
+			});
+		}
+
 		function selectLocation(type, id){
 			var locationRelationType = type;
 			var locationRelationId = id;
@@ -318,6 +328,14 @@
 
 		function createOrganization(type, id){
 			var organizationString = '';
+			organizationString += '<div><form id="organizationselectForm">';
+			organizationString += '<input type="hidden" name="action" value="selectorganization">';
+			organizationString += '<div>Name</div>';
+			organizationString += '<div><select name="id" id="organizationselect">';
+			//Populate organizations
+			organizationString += '</select></div>';
+			organizationString += '<div><input type="button" value="Select Organization" onclick="selectOrganization(\''+type+'\', '+id+')"></div>';
+			organizationString += '</form></div>';
 			organizationString += '<div><form id="organizationForm">';
 			organizationString += '<input type="hidden" name="action" value="createorganization">';
 			organizationString += '<div>Name</div>';
@@ -327,6 +345,14 @@
 			organizationString += '<div><input type="button" value="Save Organization" onclick="saveOrganization(\''+type+'\', '+id+')"></div>';
 			organizationString += '</form></div>';
 			$('#content').html(organizationString);
+			var data = {action: 'getorganizations'};
+			$.post('api.php', data, function(data){
+				var locations = JSON.parse(data);
+				for(locationKey in locations){
+					var location = locations[locationKey];
+					$("#organizationselect").append('<option value="'+locationKey+'">'+location.name+'</option>');
+				}
+			});
 		}
 		function saveOrganization(type, id){
 			$("#organizationForm").ajaxSubmit({url: 'api.php', type: 'post', success: function (data) {
@@ -362,7 +388,7 @@
 			}});
 		}
 
-		
+
 		function createEventInstance(suggestionId, createAnother){
 			$("#eventForm").ajaxSubmit({url: 'api.php', type: 'post', success: function (data) {
 				var eventId = JSON.parse(data);
@@ -403,7 +429,7 @@
 				if(relation.type == 'inseries'){
 					$('#relationships'+relation.a_id).append('<div>In series '+relation.b_id+'</div>');
 				}
-				
+
 			}
 		}
 

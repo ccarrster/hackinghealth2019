@@ -81,6 +81,19 @@ if(isset($_POST['action'])){
 		echo(json_encode($locations));
 	}
 
+	if($action == 'getorganizations'){
+			$resultdata = [];
+			$query = "select * from organization;";
+			$result = mysqli_query($link, $query);
+			if (mysqli_num_rows($result) > 0) {
+				while($row = mysqli_fetch_assoc($result)) {
+					$resultdata[$row['id']] = $row;
+				}
+			}
+			echo(json_encode($resultdata));
+	}
+
+
 	if($action == 'getsuggestion'){
 		$suggestions = [];
 		$query = "select * from suggestion where id = '".mysqli_real_escape_string($link, $_POST['id'])."';";
