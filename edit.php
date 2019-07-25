@@ -2,7 +2,7 @@
 <html>
 <body>
 <?php
-$link = mysqli_connect("127.0.0.1", "root", "F3ckth1s", "community");
+require_once('dbconfig.php');
 
 if(isset($_POST['formtype'])){
 	$formatType = $_POST['formtype'];
