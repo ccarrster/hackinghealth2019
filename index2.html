@@ -120,6 +120,7 @@
 			for(eventKey in events){
 				var event = events[eventKey];
 				eventsString += '<div class="event">';
+				eventsString += '<div>'+getEventActionString(eventKey)+'</div>';
 				eventsString += '<div>Id</div>';
 				eventsString += '<div>'+event.id+'</div>';
 				eventsString += '<div>Name</div>';
@@ -389,6 +390,10 @@
 		}
 
 
+		function getEventActionString(eventId){
+			return '<input type="button" value="Set Event Location" onclick="createLocation(\'event\', \''+eventId+'\')"> <input type="button" value="Set Event Organization" onclick="createOrganization(\'event\', \''+eventId+'\')"> <input type="button" value="Set Event Series" onclick="createSeries(\'event\', \''+eventId+'\')">';
+		}
+
 		function createEventInstance(suggestionId, createAnother){
 			$("#eventForm").ajaxSubmit({url: 'api.php', type: 'post', success: function (data) {
 				var eventId = JSON.parse(data);
@@ -396,7 +401,7 @@
 				$.post("api.php", data, function(results){
 					$.post('api.php', {action: 'suggestionstatusupdate', id: suggestionId, status: 'created'});
 					if(!createAnother){
-						$('#content').html('Event Created from suggestion. <input type="button" value="Set Event Location" onclick="createLocation(\'event\', \''+eventId+'\')"> <input type="button" value="Set Event Organization" onclick="createOrganization(\'event\', \''+eventId+'\')"> <input type="button" value="Set Event Series" onclick="createSeries(\'event\', \''+eventId+'\')">');
+						$('#content').html('Event Created from suggestion. '+getEventActionString(eventId));
 					} else {
 						startEvent(suggestionId);
 					}
